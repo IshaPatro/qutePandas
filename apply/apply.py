@@ -35,8 +35,8 @@ def apply(df, func, axis=0, return_type='q'):
             return _handle_return(result, return_type)
         else:
             if axis == 1:
-                rows = [row for row in q_table]
-                res_list = [func(row) for row in rows]
+                rows = kx.q("{(x)}", q_table)
+                res_list = [func(row.pd()) for row in rows]
                 result = kx.toq(res_list)
                 
             else:
@@ -44,7 +44,7 @@ def apply(df, func, axis=0, return_type='q'):
                 
                 res_dict = {}
                 for col in cols:
-                    col_data = kx.q(f"{{x`{col}}}", q_table).py()
+                    col_data = kx.q(f"{{x`{col}}}", q_table).pd()
                     res_dict[col] = func(col_data)
                     
                 result = kx.toq(res_dict)
@@ -53,4 +53,3 @@ def apply(df, func, axis=0, return_type='q'):
 
     except Exception as e:
         raise RuntimeError(f"Failed to apply function: {e}")
- 

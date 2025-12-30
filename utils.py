@@ -8,16 +8,6 @@ import string
 def _ensure_q_table(data):
     """
     Ensures input data is a kdb+ table.
-    
-    Parameters
-    ----------
-    data : pandas.DataFrame or pykx.Table
-        Input data.
-        
-    Returns
-    -------
-    pykx.Table
-        Data as a kdb+ table.
     """
     if isinstance(data, (kx.Table, kx.KeyedTable)):
         return data
@@ -29,18 +19,6 @@ def _ensure_q_table(data):
 def _handle_return(q_object, return_type='q'):
     """
     Handles return value based on specified return type.
-    
-    Parameters
-    ----------
-    q_object : pykx.K
-        Result from kdb+ operation.
-    return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
-        
-    Returns
-    -------
-    pandas.DataFrame or pykx.K
-        Converted result.
     """
     if return_type == 'pandas':
         return q_object.pd()
@@ -53,27 +31,6 @@ def _handle_return(q_object, return_type='q'):
 def generate_large_dataset(rows=100000, cols=10, null_percentage=0.1):
     """
     Generates a large DataFrame with random values for performance testing.
-
-    Parameters
-    ----------
-    rows : int, default 100000
-        Number of rows to generate.
-    cols : int, default 10
-        Number of columns to generate.
-    null_percentage : float, default 0.1
-        Percentage of null values to introduce (0.0 to 1.0).
-
-    Returns
-    -------
-    pandas.DataFrame
-        Generated DataFrame with mixed data types and null values.
-
-    Example
-    -------
-    >>> from qutePandas.utils import generate_large_dataset
-    >>> df = generate_large_dataset(1000, 5, 0.05)
-    >>> print(df.shape)
-    (1000, 5)
     """
     numpy.random.seed(42)
     random.seed(42)
@@ -104,30 +61,6 @@ def generate_large_dataset(rows=100000, cols=10, null_percentage=0.1):
 def compare_performance(pandas_func, qutepandas_func, data, iterations=3):
     """
     Compares performance between pandas and qutePandas functions.
-
-    Parameters
-    ----------
-    pandas_func : callable
-        Pandas function to benchmark (should take data as parameter or be a bound method).
-    qutepandas_func : callable
-        qutePandas function to benchmark.
-    data : pandas.DataFrame
-        Input data for both functions.
-    iterations : int, default 3
-        Number of iterations to run for averaging.
-
-    Returns
-    -------
-    dict
-        Dictionary containing timing results and comparison metrics.
-
-    Example
-    -------
-    >>> from qutePandas.utils import compare_performance, generate_large_dataset
-    >>> from qutePandas.cleaning import drop_nulls
-    >>> df = generate_large_dataset(1000, 5)
-    >>> results = compare_performance(df.dropna, drop_nulls, df)
-    >>> print(f"Speedup: {results['speedup']:.2f}x")
     """
     pandas_times = []
     qutepandas_times = []
@@ -170,17 +103,6 @@ def compare_performance(pandas_func, qutepandas_func, data, iterations=3):
 def benchmark_all_functions():
     """
     Runs comprehensive benchmarks for all qutePandas functions.
-
-    Returns
-    -------
-    dict
-        Dictionary containing benchmark results for all function categories.
-
-    Example
-    -------
-    >>> from qutePandas.utils import benchmark_all_functions
-    >>> results = benchmark_all_functions()
-    >>> print("Benchmark completed!")
     """
     from qutePandas.cleaning import drop_nulls, drop_nulls_col, fill_null, remove_duplicates
     from qutePandas.transformation import rename, cast, drop_col
@@ -208,4 +130,4 @@ def benchmark_all_functions():
     results['cleaning']['drop_nulls_col'] = bench_result
     print(f"  drop_nulls_col: {bench_result['speedup']:.2f}x speedup")
     
-    return results 
+    return results

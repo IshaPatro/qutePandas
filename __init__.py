@@ -3,7 +3,7 @@ qutePandas - A pandas-like library for q/kdb+
 """
 
 from .core.dataframe import DataFrame
-from .core.connection import connect, get_license_info
+from .core.connection import connect, get_license_info, install_license
 from .core.display import py, np, pd, pa, pt
 
 from .cleaning.drop_nulls import drop_nulls

@@ -27,13 +27,13 @@ class QConnectionManager:
     def _ensure_q_process(self):
         """Start a q process if not already running."""
         try:
-            # Try to connect to existing process
+
             test_conn = qconnection.QConnection(host=self.host, port=self.port)
             test_conn.open()
             test_conn.close()
-            return  # Process already running
+            return
         except:
-            # Need to start q process
+
             self._start_q_process()
             
     def _start_q_process(self):
@@ -50,10 +50,10 @@ class QConnectionManager:
                 stderr=subprocess.PIPE,
                 text=True
             )
-            # Give q process time to start
+
             time.sleep(2)
             
-            # Register cleanup
+
             atexit.register(self._cleanup)
             
         except FileNotFoundError:
@@ -107,7 +107,7 @@ class QConnectionManager:
                     pass
 
 
-# Global connection instance
+
 _global_q_connection = None
 
 
