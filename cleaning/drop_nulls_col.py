@@ -23,8 +23,7 @@ def drop_nulls_col(df, col, return_type='q'):
     """
     try:
         q_table = _ensure_q_table(df)
-        result = kx.q(f"{{select from x where not null x`{col}}}", q_table)
+        result = kx.q("{[t; c] select from t where not null t c}", q_table, kx.SymbolAtom(col))
         return _handle_return(result, return_type)
     except Exception as e:
         raise RuntimeError(f"Failed to drop nulls from column {col}: {e}")
- 

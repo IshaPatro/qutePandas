@@ -25,8 +25,8 @@ def cast(df, col, dtype, return_type='q'):
     """
     try:
         q_map = {
-            'int64': 'j', 'int32': 'i', 'int': 'i',
-            'float64': 'f', 'float32': 'e', 'float': 'f',
+            'int64': 'j', 'int32': 'i', 'int': 'i', 'long': 'j',
+            'float64': 'f', 'float32': 'e', 'float': 'f', 'real': 'e',
             'object': 's', 'string': 'C', 'str': 'C',
             'j': 'j', 'i': 'i', 'h': 'h', 'f': 'f', 'e': 'e', 's': 's', 'c': 'c'
         }
@@ -35,12 +35,11 @@ def cast(df, col, dtype, return_type='q'):
         q_table = _ensure_q_table(df)
         
         if len(q_type) == 1:
-            q_casted_type = str(q_type).upper()
-            result = kx.q(f'{{update {col}:"{q_casted_type.upper()}"${col} from x}}', q_table)
+            q_char = q_type.upper()
+            result = kx.q(f'{{update {col}:"{q_char}"${col} from x}}', q_table)
         else:
              raise ValueError(f"Unsupported q cast type: {dtype}")
 
         return _handle_return(result, return_type)
     except Exception as e:
         raise RuntimeError(f"Failed to cast column {col} to type {dtype}: {e}")
- 

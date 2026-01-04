@@ -2,6 +2,41 @@
 qutePandas - A pandas-like library for q/kdb+
 """
 
+import os
+
+def _setup_environment():
+    """Validates and sets up the environment for PyKX."""
+    root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    env_path = os.path.join(root, ".env")
+    
+    if os.path.exists(env_path):
+        with open(env_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    parts = line.split("=", 1)
+                    if len(parts) == 2:
+                        key, value = parts
+                        value = value.strip().strip('"').strip("'")
+                        if key.strip():
+                            os.environ[key.strip()] = value
+
+    # Priority: Project-local kdb_lic folder
+    qutepandas_home = os.path.expanduser("~/.qutepandas")
+    local_kdb = os.path.join(root, "kdb_lic")
+    
+    # Set QLIC to where the license is.
+    # Avoid setting QHOME to local_kdb unless it contains all platform files (m64arm).
+    # PyKX bundles its own q binaries, so usually only QLIC is needed for license.
+    if os.path.exists(os.path.join(local_kdb, "kc.lic")):
+        os.environ['QLIC'] = local_kdb
+    elif os.path.exists(os.path.join(qutepandas_home, "kc.lic")):
+        os.environ['QLIC'] = qutepandas_home
+
+_setup_environment()
+
 from .core.dataframe import DataFrame
 from .core.connection import connect, get_license_info, install_license
 from .core.display import py, np, pd, pa, pt
@@ -26,7 +61,5 @@ from .io.from_csv import from_csv
 
 from .apply.apply import apply
 from .apply.apply_col import apply_col
-
-from .utils import generate_large_dataset, compare_performance, benchmark_all_functions
 
 __version__ = "1.0.0"
