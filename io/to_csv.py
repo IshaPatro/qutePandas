@@ -1,5 +1,5 @@
 import pykx as kx
-from qutePandas.utils import _ensure_q_table
+from ..utils import _ensure_q_table
 
 def to_csv(df, path):
     """

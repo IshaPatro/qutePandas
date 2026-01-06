@@ -1,6 +1,6 @@
 import pykx as kx
 import pandas as pd
-from qutePandas.utils import _ensure_q_table, _handle_return
+from ..utils import _ensure_q_table, _handle_return
 
 
 def cast(df, col, dtype, return_type='q'):
@@ -35,7 +35,8 @@ def cast(df, col, dtype, return_type='q'):
         q_table = _ensure_q_table(df)
         
         if len(q_type) == 1:
-            q_char = q_type.upper()
+            is_parsing = kx.q(f'{{(type x`{col}) in 0 10 11h}}', q_table).py()
+            q_char = q_type.upper() if is_parsing else q_type.lower()
             result = kx.q(f'{{update {col}:"{q_char}"${col} from x}}', q_table)
         else:
              raise ValueError(f"Unsupported q cast type: {dtype}")

@@ -1,6 +1,6 @@
 import pykx as kx
 import pandas as pd
-from qutePandas.utils import _handle_return
+from ..utils import _handle_return
 
 def from_csv(path, return_type='q'):
     """

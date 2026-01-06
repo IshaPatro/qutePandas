@@ -1,6 +1,6 @@
 import pykx as kx
 import pandas as pd
-from qutePandas.utils import _ensure_q_table, _handle_return
+from ..utils import _ensure_q_table, _handle_return
 
 
 def groupby_avg(df, by_cols, avg_col, return_type='q'):
@@ -28,9 +28,12 @@ def groupby_avg(df, by_cols, avg_col, return_type='q'):
         if isinstance(by_cols, str):
             by_cols = [by_cols]
         
+        from ..utils import _validate_columns
+        _validate_columns(q_table, by_cols + [avg_col])
         by_clause = ",".join(by_cols)
         
-        result = kx.q(f"{{select avg {avg_col} by {by_clause} from x}}", q_table)
+        keyed_result = kx.q(f"{{select avg {avg_col} by {by_clause} from x}}", q_table)
+        result = kx.q("{0!x}", keyed_result)
         return _handle_return(result, return_type)
     except Exception as e:
         raise RuntimeError(f"Failed to group by avg: {e}")

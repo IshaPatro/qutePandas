@@ -6,7 +6,7 @@ import pykx as kx
 import pandas as pd
 import os
 import atexit
-from qutePandas.utils import _handle_return
+from ..utils import _handle_return
 
 os.environ['PYKX_ENFORCE_EMBEDDED_IMPORT'] = '0'
 
@@ -15,7 +15,11 @@ def DataFrame(data, columns=None, return_type='q'):
     Create DataFrame using kdb+ backend.
     """
     try:
-        if isinstance(data, dict):
+        if isinstance(data, pd.DataFrame):
+            q_res = kx.toq(data)
+        elif isinstance(data, (kx.Table, kx.KeyedTable)):
+            q_res = data
+        elif isinstance(data, dict):
             q_res = _dict_to_table(data)
         elif isinstance(data, list) and data and isinstance(data[0], list):
             q_res = _lists_to_table(data, columns)

@@ -1,6 +1,6 @@
 import pykx as kx
 import pandas as pd
-from qutePandas.utils import _ensure_q_table, _handle_return
+from ..utils import _ensure_q_table, _handle_return
 
 
 def apply_col(df, col, func, return_type='q'):

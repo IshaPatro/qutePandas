@@ -1,6 +1,6 @@
 import pykx as kx
 import pandas as pd
-from qutePandas.utils import _ensure_q_table, _handle_return
+from ..utils import _ensure_q_table, _handle_return
 
 
 def remove_duplicates(df, return_type='q'):

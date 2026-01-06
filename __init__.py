@@ -23,27 +23,21 @@ def _setup_environment():
                         if key.strip():
                             os.environ[key.strip()] = value
 
-    # Priority: Project-local kdb_lic folder
     qutepandas_home = os.path.expanduser("~/.qutepandas")
     local_kdb = os.path.join(root, "kdb_lic")
-    
-    # Set QLIC to where the license is.
-    # Avoid setting QHOME to local_kdb unless it contains all platform files (m64arm).
-    # PyKX bundles its own q binaries, so usually only QLIC is needed for license.
     if os.path.exists(os.path.join(local_kdb, "kc.lic")):
         os.environ['QLIC'] = local_kdb
     elif os.path.exists(os.path.join(qutepandas_home, "kc.lic")):
         os.environ['QLIC'] = qutepandas_home
 
 _setup_environment()
-
 from .core.dataframe import DataFrame
 from .core.connection import connect, get_license_info, install_license
 from .core.display import py, np, pd, pa, pt
 
-from .cleaning.drop_nulls import drop_nulls
-from .cleaning.drop_nulls_col import drop_nulls_col
-from .cleaning.fill_null import fill_null
+from .cleaning.dropna import dropna
+from .cleaning.dropna_col import dropna_col
+from .cleaning.fillna import fillna
 from .cleaning.remove_duplicates import remove_duplicates
 
 from .transformation.cast import cast

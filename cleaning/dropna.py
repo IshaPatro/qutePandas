@@ -1,0 +1,11 @@
+import pykx as kx
+import pandas as pd
+from ..utils import _ensure_q_table, _handle_return
+
+def dropna(df, return_type='q'):
+    try:
+        q_table = _ensure_q_table(df)
+        result = kx.q("{select from x where not any null each value flip x}", q_table)
+        return _handle_return(result, return_type)
+    except Exception as e:
+        raise RuntimeError(f"Failed to dropna: {e}")
