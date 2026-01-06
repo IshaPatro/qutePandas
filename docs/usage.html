@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qutePandas | How to use</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <aside>
+        <div class="logo-container">
+            <img src="assets/images/qutePandasLogoInversed.png" alt="qutePandas Logo">
+            <span class="logo-text">qutePandas</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Why qutePandas</a></li>
+                <li><a href="setup.html">Setup</a></li>
+                <li><a href="usage.html" class="active">How to use</a></li>
+                <li><a href="benchmarks.html">Benchmarks</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main>
+        <section id="reference">
+            <h2>How to use these functions</h2>
+            <div class="tabs">
+                <input type="radio" name="tabs" id="tab-cleaning" checked="checked">
+                <label for="tab-cleaning">Cleaning</label>
+                <div class="tab-content">
+                    <h3>Data Cleaning</h3>
+                    <p>Functions to handle null values and duplicates with high-speed kdb+ execution.</p>
+                    <pre><code>cleaned = qpd.dropna(q_table)
+
+cleaned_col = qpd.dropna_col(q_table, col="col_0")
+
+filled = qpd.fillna(q_table, col="col_0", value=0)
+
+unique = qpd.remove_duplicates(q_table)</code></pre>
+                </div>
+
+                <input type="radio" name="tabs" id="tab-transform">
+                <label for="tab-transform">Transform</label>
+                <div class="tab-content">
+                    <h3>Transformation</h3>
+                    <p>Structural changes and type casting.</p>
+                    <pre><code>renamed = qpd.rename(q_table, {"old": "new"})
+
+casted = qpd.cast(q_table, col="col_0", dtype="float32")
+
+subset = qpd.drop_col(q_table, cols=["col_9"])</code></pre>
+                </div>
+
+                <input type="radio" name="tabs" id="tab-group">
+                <label for="tab-group">Grouping</label>
+                <div class="tab-content">
+                    <h3>Grouping & Aggregation</h3>
+                    <p>High-performance aggregations leveraging q engines.</p>
+                    <pre><code>summary = qpd.groupby_sum(q_table, by_cols="cat", sum_col="val")
+
+avg_stats = qpd.groupby_avg(q_table, by_cols="cat", avg_col="val")</code></pre>
+                </div>
+            </div>
+        </section>
+        <footer
+            style="margin-top:4rem;padding:2rem 1rem;text-align:center;font-size:0.9rem;color:#9aa4b2;border-top:1px solid #1f2937;">
+            <p style="margin:0;">
+                &copy; qutePandas. Focused on speed, built on kdb+.
+                <span style="margin:0 0.4rem;color:#4b5563;">•</span>
+                Created by
+                <a href="https://ishapatro.in/" target="_blank" rel="noopener noreferrer"
+                    style="color:#60a5fa;text-decoration:none;font-weight:500;cursor:pointer;">
+                    Isha Patro
+                </a>
+            </p>
+        </footer>
+    </main>
+</body>
+
+</html>

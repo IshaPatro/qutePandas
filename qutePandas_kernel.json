@@ -1,0 +1,15 @@
+{
+    "argv": [
+        "python",
+        "-m",
+        "ipykernel_launcher",
+        "-f",
+        "{connection_file}"
+    ],
+    "display_name": "Python (qutePandas)",
+    "language": "python",
+    "env": {
+        "QHOME": "/usr/local/q",
+        "QINIT": "qutePandas.q"
+    }
+} 
