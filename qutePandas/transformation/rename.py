@@ -14,7 +14,7 @@ def rename(df, columns, return_type='q'):
     columns : dict
         Dictionary mapping old column names to new column names.
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

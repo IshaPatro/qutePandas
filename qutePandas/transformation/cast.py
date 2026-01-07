@@ -16,7 +16,7 @@ def cast(df, col, dtype, return_type='q'):
     dtype : str
         Target data type ('i' for int, 'f' for float, 's' for symbol, etc.).
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

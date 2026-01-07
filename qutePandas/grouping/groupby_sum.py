@@ -16,7 +16,7 @@ def groupby_sum(df, by_cols, sum_col, return_type='q'):
     sum_col : str
         Column to sum.
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

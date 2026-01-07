@@ -14,7 +14,7 @@ def drop_col(df, cols, return_type='q'):
     cols : str or list of str
         Column name(s) to drop.
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

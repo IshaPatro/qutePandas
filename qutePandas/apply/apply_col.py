@@ -16,7 +16,7 @@ def apply_col(df, col, func, return_type='q'):
     func : callable or str
         Function to apply to the column. If string, applied as q function string.
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

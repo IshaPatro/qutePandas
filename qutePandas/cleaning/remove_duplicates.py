@@ -12,7 +12,7 @@ def remove_duplicates(df, return_type='q'):
     df : pandas.DataFrame or pykx.Table
         Input DataFrame.
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

@@ -16,7 +16,7 @@ def apply(df, func, axis=0, return_type='q'):
     axis : int, default 0
         Axis along which to apply function (0=columns, 1=rows).
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

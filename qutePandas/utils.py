@@ -17,7 +17,7 @@ def _handle_return(q_object, return_type='q'):
     """
     Handles return value based on specified return type.
     """
-    if return_type == 'p' or return_type == 'pandas':
+    if return_type == 'p':
         return q_object.pd()
     elif return_type == 'q':
         return q_object

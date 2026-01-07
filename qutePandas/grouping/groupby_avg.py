@@ -16,7 +16,7 @@ def groupby_avg(df, by_cols, avg_col, return_type='q'):
     avg_col : str
         Column to average.
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

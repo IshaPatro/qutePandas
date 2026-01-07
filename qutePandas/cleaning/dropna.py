@@ -3,6 +3,21 @@ import pandas as pd
 from ..utils import _ensure_q_table, _handle_return
 
 def dropna(df, return_type='q'):
+    """
+    Drops any row containing null values.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame or pykx.Table
+        Input DataFrame.
+    return_type : str, default 'q'
+        Desired return type ('p' for pandas, 'q' for kdb+).
+
+    Returns
+    -------
+    pandas.DataFrame or pykx.Table
+        DataFrame with null rows removed.
+    """
     try:
         q_table = _ensure_q_table(df)
         result = kx.q("{select from x where not any null each value flip x}", q_table)

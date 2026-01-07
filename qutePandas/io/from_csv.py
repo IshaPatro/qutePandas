@@ -11,7 +11,7 @@ def from_csv(path, return_type='q'):
     path : str
         File path to load CSV from.
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

@@ -16,7 +16,7 @@ def merge_left(left, right, keys, return_type='q'):
     keys : str or list of str
         Join key column(s).
     return_type : str, default 'q'
-        Desired return type ('pandas' or 'q').
+        Desired return type ('p' or 'q').
 
     Returns
     -------

@@ -10,7 +10,7 @@ from ..utils import _handle_return
 
 os.environ['PYKX_ENFORCE_EMBEDDED_IMPORT'] = '0'
 
-def DataFrame(data, columns=None, return_type='q'):
+def DataFrame(data, columns=None):
     """
     Create DataFrame using kdb+ backend.
     """
@@ -26,7 +26,7 @@ def DataFrame(data, columns=None, return_type='q'):
         else:
             q_res = _data_to_table(data, columns)
             
-        return _handle_return(q_res, return_type)
+        return _handle_return(q_res)
     except Exception as e:
         raise RuntimeError(f"Failed to create kdb+ table: {e}")
 
