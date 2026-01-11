@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>qutePandas | Setup</title>
+    <title>qutePandas | Setup Guide</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -16,34 +16,365 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Why qutePandas</a></li>
-                <li><a href="setup.html" class="active">Setup</a></li>
-                <li><a href="usage.html">How to use</a></li>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="setup.html" class="active">Installation</a></li>
+                <li><a href="usage.html">API</a></li>
                 <li><a href="benchmarks.html">Benchmarks</a></li>
             </ul>
         </nav>
     </aside>
     <main>
         <section id="setup">
-            <h2>Setup</h2>
-            <p>To begin using qutePandas, ensure you have a valid kdb+ license and the library installed. You can
-                connect to your kdb+ session using the <code>connect()</code> method.</p>
-            <pre><code>import qutePandas as qpd
+            <h1>Complete Setup Guide</h1>
+            <p class="section-intro">
+                This comprehensive guide will walk you through setting up qutePandas from scratch,
+                even if you have zero knowledge of kdb+. Follow each step carefully to get started.
+            </p>
 
-qpd.connect()</code></pre>
-            <p>By default, qutePandas looks for a license in <code>~/.qutepandas/</code> or a <code>kdb_lic/</code>
-                folder in your project root.</p>
+            <div class="toc">
+                <h3>📋 Table of Contents</h3>
+                <ul>
+                    <li><a href="#prerequisites">Prerequisites</a></li>
+                    <li><a href="#step1">Step 1: Obtain a kdb+ License</a></li>
+                    <li><a href="#step2">Step 2: Install PyKX</a></li>
+                    <li><a href="#step3">Step 3: Store Your License</a></li>
+                    <li><a href="#step4">Step 4: Install qutePandas</a></li>
+                    <li><a href="#step5">Step 5: Verify Installation</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                </ul>
+            </div>
+
+            <div id="prerequisites" class="setup-step">
+                <div class="step-title">
+                    <span class="step-number">📦</span>
+                    <span>Prerequisites</span>
+                </div>
+                <p>Before you begin, ensure you have the following:</p>
+                <ol class="setup-checklist">
+                    <li>Python 3.8 or higher installed</li>
+                    <li>pip (Python package installer)</li>
+                    <li>An email address to register for a kdb+ license</li>
+                    <li>Basic familiarity with command line/terminal</li>
+                </ol>
+            </div>
+
+            <div id="step1" class="setup-step">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    <span>Obtain a kdb+ License</span>
+                </div>
+
+                <p><strong>What is kdb+?</strong></p>
+                <p>
+                    kdb+ is a high-performance time-series database that powers qutePandas.
+                    To use qutePandas, you need a free kdb+ license from KX Systems.
+                </p>
+
+                <p><strong>How to get your license:</strong></p>
+
+                <ol>
+                    <li>Visit the <strong>KX Personal License Download Page</strong>:
+                        <br><a href="https://kx.com/kdb-personal-edition-download/" target="_blank">
+                            https://kx.com/kdb-personal-edition-download/
+                        </a>
+                    </li>
+                    <li>Fill out the registration form with your details:
+                        <ul>
+                            <li>Full name</li>
+                            <li>Email address (you'll receive the license here)</li>
+                            <li>Company/Organization (can be "Personal" or "Student")</li>
+                            <li>Country</li>
+                        </ul>
+                    </li>
+                    <li>Accept the terms and conditions</li>
+                    <li>Click <strong>"Download"</strong></li>
+                    <li>Check your email inbox for a message from KX Systems</li>
+                    <li>Download the license file (<code>kc.lic</code> or <code>k4.lic</code>) from the email</li>
+                </ol>
+
+                <img src="assets/images/KX License.png" alt="KX License Download Page" class="screenshot">
+
+                <div class="info-box">
+                    <strong>📧 Note:</strong> The license is typically sent within a few minutes.
+                    Check your spam folder if you don't see it in your inbox.
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Important:</strong> The license file is usually named <code>kc.lic</code> or
+                    <code>k4.lic</code>.
+                    Do not rename this file!
+                </div>
+            </div>
+
+            <div id="step2" class="setup-step">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    <span>Install PyKX</span>
+                </div>
+
+                <p>
+                    PyKX is the Python interface to kdb+. qutePandas uses PyKX under the hood
+                    to communicate with kdb+.
+                </p>
+
+                <p><strong>Installation steps:</strong></p>
+
+                <ol>
+                    <li>Open your terminal or command prompt</li>
+                    <li>Run the following command:</li>
+                </ol>
+
+                <div class="code-block">pip install pykx</div>
+
+                <div class="info-box">
+                    <strong>💡 Tip:</strong> If you're using a virtual environment (recommended),
+                    make sure to activate it before running the pip install command.
+                </div>
+
+                <p><strong>Verify PyKX installation:</strong></p>
+                <div class="code-block">python -c "import pykx; print(pykx.__version__)"</div>
+
+                <p>You should see a version number like <code>2.0.0</code> or higher.</p>
+            </div>
+
+            <div id="step3" class="setup-step">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    <span>Store Your License File</span>
+                </div>
+
+                <p>
+                    qutePandas needs to know where your kdb+ license is located.
+                    There are <strong>three recommended locations</strong> where you can store it:
+                </p>
+
+                <h3>Option 1: Project-Level (Recommended for Development)</h3>
+                <p>Store the license in your project directory. This is ideal when working on a specific project.</p>
+
+                <p><strong>Step-by-step:</strong></p>
+                <ol>
+                    <li>Locate the <code>kc.lic</code> file you downloaded from your email (likely in your Downloads
+                        folder)</li>
+                    <li>Navigate to your project root directory in terminal</li>
+                    <li>Create a <span class="file-path">kdb_lic</span> folder</li>
+                    <li>Move the license file into this folder</li>
+                </ol>
+
+                <p><strong>macOS/Linux:</strong></p>
+                <div class="code-block">cd /path/to/your/project
+                    mkdir kdb_lic
+                    mv ~/Downloads/kc.lic kdb_lic/</div>
+
+                <p><strong>Windows (Command Prompt):</strong></p>
+                <div class="code-block">cd C:\path\to\your\project
+                    mkdir kdb_lic
+                    move %USERPROFILE%\Downloads\kc.lic kdb_lic\</div>
+
+                <p><strong>Windows (PowerShell):</strong></p>
+                <div class="code-block">cd C:\path\to\your\project
+                    New-Item -ItemType Directory -Name kdb_lic
+                    Move-Item $env:USERPROFILE\Downloads\kc.lic kdb_lic\</div>
+
+                <p>Your project structure should look like:</p>
+                <pre class="code-block"><code>your_project/
+├── kdb_lic/
+│   └── kc.lic
+├── your_script.py
+└── ...</code></pre>
+
+                <h3>Option 2: User Home Directory (Recommended for Global Access)</h3>
+                <p>Store the license in your home directory to use it across all your Python projects.</p>
+
+                <p><strong>Step-by-step:</strong></p>
+                <ol>
+                    <li>Locate the <code>kc.lic</code> file from your Downloads</li>
+                    <li>Create a <span class="file-path">.qutepandas</span> folder in your home directory</li>
+                    <li>Move the license file into this folder</li>
+                </ol>
+
+                <p><strong>macOS/Linux:</strong></p>
+                <div class="code-block">mkdir -p ~/.qutepandas
+                    mv ~/Downloads/kc.lic ~/.qutepandas/</div>
+
+                <p><strong>Windows (Command Prompt):</strong></p>
+                <div class="code-block">mkdir %USERPROFILE%\.qutepandas
+                    move %USERPROFILE%\Downloads\kc.lic %USERPROFILE%\.qutepandas\</div>
+
+                <p><strong>Windows (PowerShell):</strong></p>
+                <div class="code-block">New-Item -ItemType Directory -Path $env:USERPROFILE\.qutepandas
+                    Move-Item $env:USERPROFILE\Downloads\kc.lic $env:USERPROFILE\.qutepandas\</div>
+
+                <img src="assets/images/KX License Downloaded.png" alt="License File Location" class="screenshot">
+
+                <h3>Option 3: Environment Variable (Advanced)</h3>
+                <p>Set the <code>QLIC</code> environment variable to point to any directory containing your license.</p>
+
+                <p><strong>macOS/Linux (add to ~/.bashrc or ~/.zshrc):</strong></p>
+                <div class="code-block">export QLIC=/path/to/your/license/directory</div>
+
+                <p><strong>Windows (System Properties → Environment Variables):</strong></p>
+                <div class="code-block">Variable: QLIC
+                    Value: C:\path\to\your\license\directory</div>
+
+                <div class="success-box">
+                    <strong>✅ Recommendation:</strong> For most users, <strong>Option 2 (User Home Directory)</strong>
+                    is the best choice as it makes the license available to all your Python projects without cluttering
+                    individual project folders.
+                </div>
+            </div>
+
+            <div id="step4" class="setup-step">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    <span>Install qutePandas</span>
+                </div>
+
+                <p>Now that PyKX and your license are set up, install qutePandas:</p>
+
+                <div class="code-block">pip install qutePandas</div>
+
+                <div class="info-box">
+                    <strong>📦 Note:</strong> If qutePandas is not yet published to PyPI,
+                    you can install it from the source:
+                    <div class="code-block">pip install git+https://github.com/yourusername/qutePandas.git</div>
+                    Or clone and install locally:
+                    <div class="code-block">git clone https://github.com/yourusername/qutePandas.git
+                        cd qutePandas
+                        pip install -e .</div>
+                </div>
+            </div>
+
+            <div id="step5" class="setup-step">
+                <div class="step-title">
+                    <span class="step-number">5</span>
+                    <span>Verify Your Installation</span>
+                </div>
+
+                <p>Let's make sure everything is working correctly!</p>
+
+                <h3>Quick Test Script</h3>
+                <p>Create a new Python file (e.g., <code>test_qutepandas.py</code>) and add:</p>
+
+                <div class="code-block">import qutePandas as qpd
+                    import pandas as pd
+
+                    qpd.connect()
+                    print("✅ Successfully connected to kdb+!")
+
+                    df = pd.DataFrame({
+                    'name': ['Alice', 'Bob', 'Charlie'],
+                    'age': [25, 30, 35],
+                    'city': ['New York', 'London', 'Tokyo']
+                    })
+
+                    q_df = qpd.DataFrame(df)
+                    print("✅ DataFrame created successfully!")
+
+                    result = qpd.dropna(q_df, return_type='p')
+                    print("✅ Operations working correctly!")
+                    print("\nResult:")
+                    print(result)</div>
+
+                <p>Run the script:</p>
+                <div class="code-block">python test_qutepandas.py</div>
+
+                <p><strong>Expected output:</strong></p>
+                <div class="code-block">✅ Successfully connected to kdb+!
+                    ✅ DataFrame created successfully!
+                    ✅ Operations working correctly!
+
+                    Result:
+                    name age city
+                    0 Alice 25 New York
+                    1 Bob 30 London
+                    2 Charlie 35 Tokyo</div>
+
+                <div class="success-box">
+                    <strong>🎉 Congratulations!</strong> If you see this output, qutePandas is
+                    installed and working correctly!
+                </div>
+            </div>
+
+            <div id="troubleshooting" class="setup-step">
+                <div class="step-title">
+                    <span class="step-number">🔧</span>
+                    <span>Troubleshooting Common Issues</span>
+                </div>
+
+                <h3>Issue 1: "License Exception" Error</h3>
+                <div class="code-block">pykx.exceptions.LicenseException: A valid q license must be in a known location
+                </div>
+
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Verify your license file is named <code>kc.lic</code> or <code>k4.lic</code></li>
+                    <li>Check that the license is in one of these locations:
+                        <ul>
+                            <li><span class="file-path">~/.qutepandas/kc.lic</span></li>
+                            <li><span class="file-path">./kdb_lic/kc.lic</span> (in your project)</li>
+                            <li>Directory specified by <code>QLIC</code> environment variable</li>
+                        </ul>
+                    </li>
+                    <li>Manually set the license path before importing:
+                        <div class="code-block">import os
+                            os.environ['QLIC'] = '/path/to/your/license/directory'
+                            import qutePandas as qpd</div>
+                    </li>
+                </ul>
+
+                <h3>Issue 2: "ModuleNotFoundError: No module named 'pykx'"</h3>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Make sure PyKX is installed: <span class="command">pip install pykx</span></li>
+                    <li>If using a virtual environment, ensure it's activated</li>
+                    <li>Try upgrading pip: <span class="command">pip install --upgrade pip</span></li>
+                </ul>
+
+                <h3>Issue 3: Connection Timeout</h3>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Check your firewall settings</li>
+                    <li>Ensure no other kdb+ processes are running on the default port</li>
+                    <li>Try restarting your Python kernel/session</li>
+                </ul>
+
+                <h3>Issue 4: Import Errors on Windows</h3>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Install Visual C++ Redistributable if not already installed</li>
+                    <li>Ensure Python is added to your PATH</li>
+                    <li>Try running your terminal/IDE as administrator</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>💬 Still having issues?</strong>
+                    <ul>
+                        <li>Check the <a href="https://code.kx.com/pykx/" target="_blank">PyKX documentation</a></li>
+                        <li>Visit the <a href="https://github.com/yourusername/qutePandas/issues" target="_blank">GitHub
+                                Issues page</a></li>
+                        <li>Contact support at <a href="mailto:support@qutepandas.com">support@qutepandas.com</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>🚀 Next Steps</h3>
+                <p>Now that you have qutePandas installed, you're ready to:</p>
+                <ol>
+                    <li>Explore the <a href="usage.html">API Documentation</a> to learn about available functions</li>
+                    <li>Check out the <a href="benchmarks.html">Benchmarks</a> to see performance comparisons</li>
+                    <li>Try the example notebooks in the <code>tests/</code> directory</li>
+                    <li>Start building your own high-performance data pipelines!</li>
+                </ol>
+            </div>
+
         </section>
-        <footer
-            style="margin-top:4rem;padding:2rem 1rem;text-align:center;font-size:0.9rem;color:#9aa4b2;border-top:1px solid #1f2937;">
-            <p style="margin:0;">
-                &copy; qutePandas. Focused on speed, built on kdb+.
-                <span style="margin:0 0.4rem;color:#4b5563;">•</span>
-                Created by
-                <a href="https://ishapatro.in/" target="_blank" rel="noopener noreferrer"
-                    style="color:#60a5fa;text-decoration:none;font-weight:500;cursor:pointer;">
-                    Isha Patro
-                </a>
+
+        <footer>
+            <p>
+                &copy; 2026 qutePandas. Focused on speed, built on kdb+.
+                <span class="dot">·</span>
+                Created by <a href="https://ishapatro.in/" target="_blank" rel="noopener noreferrer">Isha Patro</a>
             </p>
         </footer>
     </main>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>qutePandas | How to use</title>
+    <title>qutePandas | API Reference</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -16,67 +16,746 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Why qutePandas</a></li>
-                <li><a href="setup.html">Setup</a></li>
-                <li><a href="usage.html" class="active">How to use</a></li>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="setup.html">Installation</a></li>
+                <li><a href="usage.html" class="active">API</a></li>
                 <li><a href="benchmarks.html">Benchmarks</a></li>
             </ul>
         </nav>
     </aside>
     <main>
-        <section id="reference">
-            <h2>How to use these functions</h2>
-            <div class="tabs">
-                <input type="radio" name="tabs" id="tab-cleaning" checked="checked">
-                <label for="tab-cleaning">Cleaning</label>
-                <div class="tab-content">
-                    <h3>Data Cleaning</h3>
-                    <p>Functions to handle null values and duplicates with high-speed kdb+ execution.</p>
-                    <pre><code>cleaned = qpd.dropna(q_table)
+        <h1>API Reference</h1>
+        <p>A comprehensive technical guide to the qutePandas public API. This library translates standard Pandas
+            operations into optimized kdb+ primitives, offloading heavy computations to a high-performance vector engine
+            while maintaining the developer experience of the Python data ecosystem.</p>
 
-cleaned_col = qpd.dropna_col(q_table, col="col_0")
+        <div class="sub-nav">
+            <a href="#core" class="active">Core</a>
+            <a href="#cleaning">Cleaning</a>
+            <a href="#transformation">Transformation</a>
+            <a href="#grouping">Grouping</a>
+            <a href="#joining">Joining</a>
+            <a href="#io">I/O</a>
+            <a href="#apply">Apply</a>
+            <a href="#introspection">Introspection</a>
+        </div>
 
-filled = qpd.fillna(q_table, col="col_0", value=0)
+        <div class="search-container">
+            <input type="text" id="apiSearch" placeholder="Search functions, parameters, or Pandas equivalents..."
+                autocomplete="off">
+        </div>
 
-unique = qpd.remove_duplicates(q_table)</code></pre>
+        <div id="apiContent">
+            <!-- Core Section -->
+            <div class="api-section" id="core" data-category="core">
+                <h2>Core</h2>
+
+                <div class="function-card" id="DataFrame">
+                    <div class="function-header">
+                        <span class="function-name">DataFrame(data, columns=None)</span>
+                        <span class="pandas-resemblance">pd.DataFrame()</span>
+                    </div>
+                    <div class="function-description">
+                        Initialize a kdb+ memory-mapped table from standard Python objects. This constructor bridges the
+                        gap between row-major Python memory and columnar kdb+ performance, materializing data
+                        immediately into the backend. For out-of-core datasets larger than RAM, consider using
+                        <code>from_csv</code> with memory mapping.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">data</span><span class="param-type">dict, list, or
+                                    pd.DataFrame</span></td>
+                            <td>Source data. Dictionary keys become column headers; nested lists are treated as row
+                                records. Existing DataFrames are efficiently mirrored into the kdb+ workspace.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">columns</span><span class="param-type">list of str</span></td>
+                            <td>Explicit schema definition. This is required when the input <code>data</code> is a list
+                                without intrinsic header information.</td>
+                        </tr>
+                    </table>
                 </div>
 
-                <input type="radio" name="tabs" id="tab-transform">
-                <label for="tab-transform">Transform</label>
-                <div class="tab-content">
-                    <h3>Transformation</h3>
-                    <p>Structural changes and type casting.</p>
-                    <pre><code>renamed = qpd.rename(q_table, {"old": "new"})
+                <div class="function-card" id="connect">
+                    <div class="function-header">
+                        <span class="function-name">connect(license_path=None)</span>
+                        <span class="pandas-resemblance">N/A</span>
+                    </div>
+                    <div class="function-description">
+                        Global initializer for the kdb+ runtime environment. This function verifies license validity and
+                        manages critical environment variables such as <code>QLIC</code> and <code>QHOME</code>, which
+                        are required for embedded PyKX operations. It must be called once at the start of any session.
+                    </div>
 
-casted = qpd.cast(q_table, col="col_0", dtype="float32")
-
-subset = qpd.drop_col(q_table, cols=["col_9"])</code></pre>
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">license_path</span><span class="param-type">str</span></td>
+                            <td>Optional explicit path to a <code>kc.lic</code> or <code>k4.lic</code> file. If omitted,
+                                the library searches standard paths and project-root folders.</td>
+                        </tr>
+                    </table>
                 </div>
 
-                <input type="radio" name="tabs" id="tab-group">
-                <label for="tab-group">Grouping</label>
-                <div class="tab-content">
-                    <h3>Grouping & Aggregation</h3>
-                    <p>High-performance aggregations leveraging q engines.</p>
-                    <pre><code>summary = qpd.groupby_sum(q_table, by_cols="cat", sum_col="val")
+                <div class="function-card" id="install_license">
+                    <div class="function-header">
+                        <span class="function-name">install_license(content, is_base64=True)</span>
+                        <span class="pandas-resemblance">N/A</span>
+                    </div>
+                    <div class="function-description">
+                        Programmatically installs a kdb+ license token or file content. This is particularly useful for
+                        containerized or ephemeral environments (such as CI/CD pipelines) where environment variables
+                        are preferred over physical file deployments.
+                    </div>
 
-avg_stats = qpd.groupby_avg(q_table, by_cols="cat", avg_col="val")</code></pre>
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">content</span><span class="param-type">str</span></td>
+                            <td>The base64 encoded license token or raw content of a license file.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">is_base64</span><span class="param-type">bool</span></td>
+                            <td>Specifies if the <code>content</code> string is base64 encoded. Defaults to
+                                <code>True</code>.
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-        </section>
-        <footer
-            style="margin-top:4rem;padding:2rem 1rem;text-align:center;font-size:0.9rem;color:#9aa4b2;border-top:1px solid #1f2937;">
-            <p style="margin:0;">
-                &copy; qutePandas. Focused on speed, built on kdb+.
-                <span style="margin:0 0.4rem;color:#4b5563;">•</span>
-                Created by
-                <a href="https://ishapatro.in/" target="_blank" rel="noopener noreferrer"
-                    style="color:#60a5fa;text-decoration:none;font-weight:500;cursor:pointer;">
-                    Isha Patro
-                </a>
-            </p>
+
+            <!-- Cleaning Section -->
+            <div class="api-section" id="cleaning" data-category="cleaning">
+                <h2>Cleaning</h2>
+
+                <div class="function-card" id="dropna">
+                    <div class="function-header">
+                        <span class="function-name">dropna(df, return_type='q')</span>
+                        <span class="pandas-resemblance">df.dropna()</span>
+                    </div>
+                    <div class="function-description">
+                        Eliminates any records containing null values across the entire dataset. This operation
+                        leverages kdb+'s efficient vector null-checking to prune incomplete data, preventing the
+                        propagation of nulls in downstream analytical models.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">df</span><span class="param-type">Source</span></td>
+                            <td>The input qutePandas or PyKX Table to be cleaned.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> for maximum performance or <code>'p'</code>
+                                for immediate conversion back to Pandas.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="dropna_col">
+                    <div class="function-header">
+                        <span class="function-name">dropna_col(df, col, return_type='q')</span>
+                        <span class="pandas-resemblance">df.dropna(subset=[col])</span>
+                    </div>
+                    <div class="function-description">
+                        Targeted null removal focused on a specific column. This is essential for datasets where some
+                        attributes are permitted to be null, but core identifier or feature columns must remain complete
+                        for valid computation.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">col</span><span class="param-type">str</span></td>
+                            <td>The target column to scan for nulls. The library handles various null representations
+                                (e.g., <code>0Nh</code> for integers or <code>""</code> for strings) automatically based
+                                on the column's underlying kdb+ type.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="fillna">
+                    <div class="function-header">
+                        <span class="function-name">fillna(df, col, value, return_type='q')</span>
+                        <span class="pandas-resemblance">df.fillna()</span>
+                    </div>
+                    <div class="function-description">
+                        Replaces null entries with a specified constant value. This enabling "zero-filling" or default
+                        assignment in feature engineering pipelines without creating expensive memory copies, using
+                        kdb+'s native <code>^</code> (fill) operator.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">col</span><span class="param-type">str</span></td>
+                            <td>The column to apply the fill operation to.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">value</span><span class="param-type">scalar</span></td>
+                            <td>The replacement value. Python strings are automatically converted to kdb+ symbols where
+                                appropriate for optimized storage.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="remove_duplicates">
+                    <div class="function-header">
+                        <span class="function-name">remove_duplicates(df, return_type='q')</span>
+                        <span class="pandas-resemblance">df.drop_duplicates()</span>
+                    </div>
+                    <div class="function-description">
+                        Retains only the first occurrence of unique rows in the dataset, discarding all subsequent
+                        duplicates. This is optimized using kdb+'s <code>distinct</code> primitive, making it
+                        exceptionally fast for de-duplicating high-volume tick data or batch audit logs.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transformation Section -->
+            <div class="api-section" id="transformation" data-category="transformation">
+                <h2>Transformation</h2>
+
+                <div class="function-card" id="cast">
+                    <div class="function-header">
+                        <span class="function-name">cast(df, col, dtype, return_type='q')</span>
+                        <span class="pandas-resemblance">df.astype()</span>
+                    </div>
+                    <div class="function-description">
+                        Changes the data type of a specific column. This is essential for correcting inference errors
+                        from raw data loads or optimizing storage for keyed lookups and joins. Supported types include
+                        standard numeric, text, and temporal primitives mapping directly to kdb+ internal types.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">col</span><span class="param-type">str</span></td>
+                            <td>The name of the target column for type conversion.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">dtype</span><span class="param-type">str</span></td>
+                            <td>The target data type (e.g., <code>'int'</code>, <code>'symbol'</code>,
+                                <code>'float'</code>, <code>'timestamp'</code>).
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+
+                    <div class="usage-notes" style="margin-top: 24px;">
+                        <span class="doc-label">Supported Type Mappings</span>
+                        <div class="type-grid">
+                            <div class="type-item">Numeric: <strong>int, long, real, float</strong></div>
+                            <div class="type-item">Text: <strong>string, symbol</strong></div>
+                            <div class="type-item">KDB Primitives: <strong>i, j, f, s, c</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="function-card" id="rename">
+                    <div class="function-header">
+                        <span class="function-name">rename(df, columns, return_type='q')</span>
+                        <span class="pandas-resemblance">df.rename()</span>
+                    </div>
+                    <div class="function-description">
+                        Updates column headers using a dictionary mapping. This operation standardizes schemas across
+                        disparate data sources with zero data movement, as it modifies the table metadata directly in
+                        the kdb+ workspace.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">columns</span><span class="param-type">dict</span></td>
+                            <td>A dictionary mapping old column names to new ones, e.g.,
+                                <code>{'old_name': 'new_name'}</code>.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="drop_col">
+                    <div class="function-header">
+                        <span class="function-name">drop_col(df, cols, return_type='q')</span>
+                        <span class="pandas-resemblance">df.drop()</span>
+                    </div>
+                    <div class="function-description">
+                        Removes unwanted columns from the dataset to reduce the memory footprint and simplify the schema
+                        before performing high-compute operations like joins or exports.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">cols</span><span class="param-type">str or list</span></td>
+                            <td>A single column name or a list of names to be discarded from the table.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Grouping Section -->
+            <div class="api-section" id="grouping" data-category="grouping">
+                <h2>Grouping</h2>
+
+                <div class="function-card" id="groupby_sum">
+                    <div class="function-header">
+                        <span class="function-name">groupby_sum(df, by_cols, sum_col, return_type='q')</span>
+                        <span class="pandas-resemblance">df.groupby().sum()</span>
+                    </div>
+                    <div class="function-description">
+                        Aggregates records by key columns and computes the sum of a target numeric column. This
+                        leverages kdb+'s high-volume aggregation engine, which is particularly efficient for time-series
+                        and financial transaction datasets.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">by_cols</span><span class="param-type">str or list</span></td>
+                            <td>One or more columns to use as grouping keys.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">sum_col</span><span class="param-type">str</span></td>
+                            <td>The numeric column to be aggregated.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="groupby_avg">
+                    <div class="function-header">
+                        <span class="function-name">groupby_avg(df, by_cols, avg_col, return_type='q')</span>
+                        <span class="pandas-resemblance">df.groupby().mean()</span>
+                    </div>
+                    <div class="function-description">
+                        Computes the arithmetic mean for grouped records. By utilizing kdb+'s native vector speed, this
+                        operation can process millions of groups per second, far exceeding the performance of
+                        traditional row-based row iterators.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">by_cols</span><span class="param-type">str or list</span></td>
+                            <td>One or more columns to use as grouping keys.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">avg_col</span><span class="param-type">str</span></td>
+                            <td>The numeric column for which to calculate the average.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Joining Section -->
+            <div class="api-section" id="joining" data-category="joining">
+                <h2>Joining</h2>
+
+                <div class="function-card" id="merge_left">
+                    <div class="function-header">
+                        <span class="function-name">merge_left(left, right, keys, return_type='q')</span>
+                        <span class="pandas-resemblance">pd.merge(how='left')</span>
+                    </div>
+                    <div class="function-description">
+                        Enriches a primary dataset with attributes from a lookup table. Records in the <code>left</code>
+                        table are preserved, while matching data from the <code>right</code> table is appended based on
+                        the specified keys.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">left, right</span><span class="param-type">Source</span></td>
+                            <td>The two qutePandas or PyKX tables to be joined.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">keys</span><span class="param-type">str or list</span></td>
+                            <td>The common column(s) used for the join operation. These must exist in both tables.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="merge_inner">
+                    <div class="function-header">
+                        <span class="function-name">merge_inner(left, right, keys, return_type='q')</span>
+                        <span class="pandas-resemblance">pd.merge(how='inner')</span>
+                    </div>
+                    <div class="function-description">
+                        Intersects two datasets to find matching records across sources. This is highly optimized by
+                        kdb+'s hash-join architecture, providing near-linear performance scaling with data size.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">left, right</span><span class="param-type">Source</span></td>
+                            <td>The tables to join.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">keys</span><span class="param-type">str or list</span></td>
+                            <td>The join key columns.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- I/O Section -->
+            <div class="api-section" id="io" data-category="io">
+                <h2>I/O</h2>
+
+                <div class="function-card" id="from_csv">
+                    <div class="function-header">
+                        <span class="function-name">from_csv(path, return_type='q')</span>
+                        <span class="pandas-resemblance">pd.read_csv()</span>
+                    </div>
+                    <div class="function-description">
+                        Bulk ingests CSV files directly into kdb+ memory-mapped space. This method is specifically
+                        designed to bypass Python's memory limits, allowing for the rapid analysis of multi-gigabyte
+                        datasets that would otherwise trigger Out-Of-Memory (OOM) errors in standard Pandas.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">path</span><span class="param-type">str</span></td>
+                            <td>The filesystem path to the target CSV file.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="to_csv">
+                    <div class="function-header">
+                        <span class="function-name">to_csv(df, path)</span>
+                        <span class="pandas-resemblance">df.to_csv()</span>
+                    </div>
+                    <div class="function-description">
+                        Serializes kdb+ tables to standard CSV format. This utility ensures cross-system
+                        interoperability, making it easy to share results with stakeholders or downstream systems that
+                        do not have a kdb+ runtime.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">df</span><span class="param-type">Source</span></td>
+                            <td>The table to be exported.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">path</span><span class="param-type">str</span></td>
+                            <td>The target file path for the exported CSV.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Apply Section -->
+            <div class="api-section" id="apply" data-category="apply">
+                <h2>Apply</h2>
+
+                <div class="function-card" id="apply">
+                    <div class="function-header">
+                        <span class="function-name">apply(df, func, axis=0, return_type='q')</span>
+                        <span class="pandas-resemblance">df.apply()</span>
+                    </div>
+                    <div class="function-description">
+                        Executes arbitrary Python logic on the dataset. This is used for complex domain transformations
+                        that cannot be elegantly expressed via native kdb+ primitives. While highly flexible, users
+                        should prefer <code>axis=0</code> (columnar) for performance, as row-wise operations incur
+                        significant overhead.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">func</span><span class="param-type">callable</span></td>
+                            <td>The Python function or lambda to apply.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">axis</span><span class="param-type">int</span></td>
+                            <td><code>0</code> for columnar application (efficient), <code>1</code> for row-wise
+                                application (slow fallback).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="function-card" id="apply_col">
+                    <div class="function-header">
+                        <span class="function-name">apply_col(df, col, func, return_type='q')</span>
+                        <span class="pandas-resemblance">df[col].apply()</span>
+                    </div>
+                    <div class="function-description">
+                        Transforms a single targeted column using granular Logic. This allows for specific data cleaning
+                        or feature extraction on a per-column basis while maintaining high table-wide performance for
+                        all other attributes.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">col</span><span class="param-type">str</span></td>
+                            <td>The name of the column to transform.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">func</span><span class="param-type">callable</span></td>
+                            <td>The function to apply to each element of the specified column.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Introspection Section -->
+            <div class="api-section" id="introspection" data-category="introspection">
+                <h2>Introspection</h2>
+
+                <div class="function-card" id="dtypes">
+                    <div class="function-header">
+                        <span class="function-name">dtypes(df, return_type='q')</span>
+                        <span class="pandas-resemblance">df.dtypes</span>
+                    </div>
+                    <div class="function-description">
+                        Retrieves the underlying data types for all columns in the dataset. This uses kdb+'s
+                        <code>meta</code> primitive to expose the internal representation (e.g., symbol, float,
+                        timestamp) of the data as managed by the vector engine.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">df</span><span class="param-type">Source</span></td>
+                            <td>The input qutePandas or PyKX Table.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="noResults" class="no-results hidden">
+            No functions found matching your search.
+        </div>
+
+        <footer>
+            <p>&copy; 2026 qutePandas Team. Engineer-first documentation for high-performance data engineering.</p>
         </footer>
     </main>
+
+    <script>
+        const searchInput = document.getElementById('apiSearch');
+        const cards = document.querySelectorAll('.function-card');
+        const sections = document.querySelectorAll('.api-section');
+        const noResults = document.getElementById('noResults');
+        const subNavLinks = document.querySelectorAll('.sub-nav a');
+
+        // Search logic
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            let totalFound = 0;
+
+            sections.forEach(section => {
+                let sectionVisible = false;
+                const sectionCards = section.querySelectorAll('.function-card');
+
+                sectionCards.forEach(card => {
+                    const name = card.querySelector('.function-name').textContent.toLowerCase();
+                    const desc = card.querySelector('.function-description').textContent.toLowerCase();
+                    const pandas = card.querySelector('.pandas-resemblance')?.textContent.toLowerCase() || "";
+
+                    // Also check parameters
+                    const params = Array.from(card.querySelectorAll('.param-name')).map(p => p.textContent.toLowerCase()).join(" ");
+
+                    if (name.includes(query) || desc.includes(query) || pandas.includes(query) || params.includes(query)) {
+                        card.classList.remove('hidden');
+                        sectionVisible = true;
+                        totalFound++;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                if (sectionVisible) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+
+            if (totalFound === 0 && query !== "") {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+
+        // Sub-nav active state on scroll
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 120)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            subNavLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scroll for sub-nav
+        subNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                window.scrollTo({
+                    top: targetSection.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

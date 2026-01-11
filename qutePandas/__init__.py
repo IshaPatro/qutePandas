@@ -20,7 +20,7 @@ def _setup_environment():
                     if len(parts) == 2:
                         key, value = parts
                         value = value.strip().strip('"').strip("'")
-                        if key.strip():
+                        if key.strip() and key.strip() not in os.environ:
                             os.environ[key.strip()] = value
 
     qutepandas_home = os.path.expanduser("~/.qutepandas")
@@ -55,5 +55,7 @@ from .io.from_csv import from_csv
 
 from .apply.apply import apply
 from .apply.apply_col import apply_col
+
+from .introspection.dtypes import dtypes
 
 __version__ = "1.0.0"

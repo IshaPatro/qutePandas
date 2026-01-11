@@ -16,9 +16,9 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Why qutePandas</a></li>
-                <li><a href="setup.html">Setup</a></li>
-                <li><a href="usage.html">How to use</a></li>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="setup.html">Installation</a></li>
+                <li><a href="usage.html">API</a></li>
                 <li><a href="benchmarks.html" class="active">Benchmarks</a></li>
             </ul>
         </nav>
@@ -31,36 +31,56 @@
             <div class="benchmark-grid">
                 <div class="card">
                     <h4>dropna</h4>
-                    <p>Speedup: <span class="speed-tag">7.99x</span></p>
-                    <p><small>Pandas: 1.05s | qpd: 0.13s</small></p>
+                    <p>Speedup: <span class="speed-tag">11.0x</span></p>
+                    <p><small>Pandas: 1.43s | qpd: 0.13s</small></p>
+                </div>
+                <div class="card">
+                    <h4>dropna_col</h4>
+                    <p>Speedup: <span class="speed-tag">12.0x</span></p>
+                    <p><small>Pandas: 0.60s | qpd: 0.05s</small></p>
                 </div>
                 <div class="card">
                     <h4>fillna</h4>
-                    <p>Speedup: <span class="speed-tag">135x</span></p>
-                    <p><small>Pandas: 0.60s | qpd: 0.004s</small></p>
+                    <p>Speedup: <span class="speed-tag">175x</span></p>
+                    <p><small>Pandas: 0.69s | qpd: 0.004s</small></p>
                 </div>
                 <div class="card">
                     <h4>rename</h4>
-                    <p>Speedup: <span class="speed-tag">7967x</span></p>
-                    <p><small>Pandas: 0.57s | qpd: 0.0001s</small></p>
+                    <p>Speedup: <span class="speed-tag">8132x</span></p>
+                    <p><small>Pandas: 0.61s | qpd: 0.0001s</small></p>
+                </div>
+                <div class="card">
+                    <h4>cast</h4>
+                    <p>Speedup: <span class="speed-tag">6.0x</span></p>
+                    <p><small>Pandas: 0.004s | qpd: 0.0007s</small></p>
+                </div>
+                <div class="card">
+                    <h4>drop_col</h4>
+                    <p>Speedup: <span class="speed-tag">6589x</span></p>
+                    <p><small>Pandas: 0.55s | qpd: 0.0001s</small></p>
                 </div>
                 <div class="card">
                     <h4>groupby_sum</h4>
-                    <p>Speedup: <span class="speed-tag">88x</span></p>
+                    <p>Speedup: <span class="speed-tag">95x</span></p>
                     <p><small>Pandas: 0.28s | qpd: 0.003s</small></p>
+                </div>
+                <div class="card">
+                    <h4>groupby_avg</h4>
+                    <p>Speedup: <span class="speed-tag">59x</span></p>
+                    <p><small>Pandas: 0.27s | qpd: 0.005s</small></p>
+                </div>
+                <div class="card">
+                    <h4>apply (row-wise)</h4>
+                    <p>Speedup: <span class="speed-tag" style="color: #f85149;">0.51x</span></p>
+                    <p><small>Pandas: 0.46s | qpd: 0.91s</small></p>
                 </div>
             </div>
         </section>
-        <footer
-            style="margin-top:4rem;padding:2rem 1rem;text-align:center;font-size:0.9rem;color:#9aa4b2;border-top:1px solid #1f2937;">
-            <p style="margin:0;">
-                &copy; qutePandas. Focused on speed, built on kdb+.
-                <span style="margin:0 0.4rem;color:#4b5563;">•</span>
-                Created by
-                <a href="https://ishapatro.in/" target="_blank" rel="noopener noreferrer"
-                    style="color:#60a5fa;text-decoration:none;font-weight:500;cursor:pointer;">
-                    Isha Patro
-                </a>
+        <footer>
+            <p>
+                &copy; 2026 qutePandas. Focused on speed, built on kdb+.
+                <span class="dot">·</span>
+                Created by <a href="https://ishapatro.in/" target="_blank" rel="noopener noreferrer">Isha Patro</a>
             </p>
         </footer>
     </main>

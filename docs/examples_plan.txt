@@ -1,0 +1,23 @@
+Examples to add for each function in usage.html:
+
+1. DataFrame - Create a DataFrame
+2. connect - Connect to kdb+
+3. install_license - Install license programmatically
+4. dropna - Remove rows with null values
+5. dropna_col - Remove rows with nulls in specific column
+6. fillna - Fill null values
+7. remove_duplicates - Remove duplicate rows
+8. cast - Cast column to different type
+9. rename - Rename columns
+10. drop_col - Drop a column
+11. groupby_sum - Group and sum
+12. groupby_avg - Group and average
+13. merge_left - Left join
+14. merge_inner - Inner join
+15. from_csv - Read CSV
+16. to_csv - Write CSV
+17. apply - Apply function
+18. apply_col - Apply function to column
+19. dtypes - Get data types
+
+Let me add examples systematically to the HTML file.
