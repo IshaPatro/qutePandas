@@ -275,19 +275,44 @@ footer {
 
 /* API Search Bar Refinement */
 .search-container {
+    margin-bottom: 48px;
+    position: relative;
+    max-width: 800px;
+}
+
+#apiSearch {
+    width: 100%;
+    background: var(--side-bg);
     border: 1px solid var(--border-color);
-    padding: 14px 20px;
-    border-radius: 10px;
+    padding: 16px 24px 16px 52px;
+    border-radius: 12px;
     color: var(--text-bright);
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-family: var(--font-sans);
-    transition: box-shadow 0.2s, border-color 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.search-container::before {
+    content: "🔍";
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 #apiSearch:focus {
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px var(--accent-glow);
+    box-shadow: 0 0 0 4px var(--accent-glow), 0 8px 16px rgba(0, 0, 0, 0.3);
+    background: var(--card-hover-bg);
+}
+
+#apiSearch::placeholder {
+    color: var(--text-muted);
 }
 
 /* Categorized Section Headers */
@@ -410,6 +435,23 @@ footer {
     color: var(--text-muted);
     border-left: 2px solid var(--border-color);
     padding-left: 16px;
+}
+
+.example-block {
+    margin-top: 32px;
+}
+
+.example-block pre {
+    background: #0d1117;
+    margin: 12px 0 0 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.example-block code {
+    color: var(--text-bright);
+    line-height: 1.6;
 }
 
 .hidden {

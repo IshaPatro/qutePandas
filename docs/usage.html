@@ -80,6 +80,13 @@
                                 without intrinsic header information.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+data = {'A': [1, 2], 'B': [3, 4]}
+df = qpd.DataFrame(data)</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="connect">
@@ -105,6 +112,12 @@
                                 the library searches standard paths and project-root folders.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+qpd.connect()</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="install_license">
@@ -135,6 +148,12 @@
                             </td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+qpd.install_license("YOUR_LICENSE_CONTENT")</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -169,6 +188,12 @@
                                 for immediate conversion back to Pandas.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df_clean = qpd.dropna(df)</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="dropna_col">
@@ -199,6 +224,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df_clean = qpd.dropna_col(df, col='price')</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="fillna">
@@ -232,6 +263,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df_filled = qpd.fillna(df, col='volume', value=0)</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="remove_duplicates">
@@ -256,6 +293,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df_unique = qpd.remove_duplicates(df)</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -296,6 +339,12 @@
                         </tr>
                     </table>
 
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df_cast = qpd.cast(df, col='userId', dtype='int')</code></pre>
+                    </div>
+
                     <div class="usage-notes" style="margin-top: 24px;">
                         <span class="doc-label">Supported Type Mappings</span>
                         <div class="type-grid">
@@ -334,6 +383,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df_renamed = qpd.rename(df, columns={'old_col': 'new_col'})</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="drop_col">
@@ -361,6 +416,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df_reduced = qpd.drop_col(df, cols=['metadata', 'debug_flag'])</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -398,6 +459,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+res = qpd.groupby_sum(df, by_cols='category', sum_col='revenue')</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="groupby_avg">
@@ -430,6 +497,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+res = qpd.groupby_avg(df, by_cols=['region', 'year'], avg_col='sales')</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -467,6 +540,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+enriched = qpd.merge_left(left_df, right_df, keys='user_id')</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="merge_inner">
@@ -498,6 +577,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+intersected = qpd.merge_inner(df_a, df_b, keys=['order_id', 'date'])</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -531,6 +616,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df = qpd.from_csv('historical_data.csv')</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="to_csv">
@@ -559,6 +650,12 @@
                             <td>The target file path for the exported CSV.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+qpd.to_csv(df, 'processed_results.csv')</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -598,6 +695,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+res = qpd.apply(df, func=lambda x: x * 1.05, axis=0)</code></pre>
+                    </div>
                 </div>
 
                 <div class="function-card" id="apply_col">
@@ -630,6 +733,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+res = qpd.apply_col(df, col='price', func=lambda x: round(x, 2))</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -663,6 +772,12 @@
                             <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
                         </tr>
                     </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+schema = qpd.dtypes(df)</code></pre>
+                    </div>
                 </div>
             </div>
 
