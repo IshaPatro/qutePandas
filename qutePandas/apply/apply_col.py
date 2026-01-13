@@ -1,5 +1,6 @@
 import pykx as kx
 import pandas as pd
+import numpy as np
 from ..utils import _ensure_q_table, _handle_return
 
 
@@ -36,11 +37,7 @@ def apply_col(df, col, func, return_type='q'):
             elif isinstance(col_data, list):
                 new_data = [func(x) for x in col_data]
             else:
-                try:
-                    import numpy as np
-                    new_data = np.vectorize(func)(col_data)
-                except:
-                    new_data = [func(x) for x in col_data]
+                new_data = np.vectorize(func)(col_data)
             
             q_new_data = kx.toq(new_data)
             result = kx.q(f"{{update {col}:y from x}}", q_table, q_new_data)

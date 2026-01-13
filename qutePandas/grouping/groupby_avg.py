@@ -1,6 +1,6 @@
 import pykx as kx
 import pandas as pd
-from ..utils import _ensure_q_table, _handle_return
+from ..utils import _ensure_q_table, _handle_return, _validate_columns
 
 
 def groupby_avg(df, by_cols, avg_col, return_type='q'):
@@ -28,7 +28,6 @@ def groupby_avg(df, by_cols, avg_col, return_type='q'):
         if isinstance(by_cols, str):
             by_cols = [by_cols]
         
-        from ..utils import _validate_columns
         _validate_columns(q_table, by_cols + [avg_col])
         by_clause = ",".join(by_cols)
         

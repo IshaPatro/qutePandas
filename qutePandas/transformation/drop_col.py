@@ -1,6 +1,6 @@
 import pykx as kx
 import pandas as pd
-from ..utils import _ensure_q_table, _handle_return
+from ..utils import _ensure_q_table, _handle_return, _validate_columns
 
 
 def drop_col(df, cols, return_type='q'):
@@ -26,7 +26,6 @@ def drop_col(df, cols, return_type='q'):
         if isinstance(cols, str):
             cols = [cols]
         
-        from ..utils import _validate_columns
         _validate_columns(q_table, cols)
         if cols:
             result = kx.q(f"{{delete {','.join(cols)} from x}}", q_table)

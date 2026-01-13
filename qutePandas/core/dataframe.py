@@ -1,7 +1,3 @@
-"""
-DataFrame creation functions for qutePandas.
-"""
-
 import pykx as kx
 import pandas as pd
 import os
@@ -12,11 +8,29 @@ os.environ['PYKX_ENFORCE_EMBEDDED_IMPORT'] = '0'
 
 def DataFrame(data, columns=None):
     """
-    Create DataFrame using kdb+ backend.
+    Creates a qutePandas DataFrame (internal pykx Table).
+
+    Parameters
+    ----------
+    data : array-like, dict, or pandas.DataFrame
+        Data to be stored in the table.
+    columns : list, optional
+        Column names to use if data does not already have them.
+
+    Returns
+    -------
+    pykx.Table
+        The resulting kdb+ table.
     """
     try:
         if isinstance(data, pd.DataFrame):
-            q_res = kx.toq(data)
+            obj_cols = [c for c in data.columns if data[c].dtype == 'object']
+            if obj_cols:
+                d = {str(c): data[c].values if c not in obj_cols else data[c].astype('category').values 
+                     for c in data.columns}
+                q_res = kx.q('flip', kx.toq(d))
+            else:
+                q_res = kx.toq(data)
         elif isinstance(data, (kx.Table, kx.KeyedTable)):
             q_res = data
         elif isinstance(data, dict):
@@ -25,13 +39,25 @@ def DataFrame(data, columns=None):
             q_res = _lists_to_table(data, columns)
         else:
             q_res = _data_to_table(data, columns)
-            
         return _handle_return(q_res)
     except Exception as e:
         raise RuntimeError(f"Failed to create kdb+ table: {e}")
 
 
 def _dict_to_table(data_dict):
+    """
+    Converts a dictionary to a kdb+ table.
+
+    Parameters
+    ----------
+    data_dict : dict
+        Dictionary to convert.
+
+    Returns
+    -------
+    pykx.Table
+        The resulting kdb+ table.
+    """
     try:
         q_dict = kx.toq(data_dict)
         return kx.q("{flip x}", q_dict)
@@ -40,6 +66,21 @@ def _dict_to_table(data_dict):
 
 
 def _lists_to_table(data_lists, columns=None):
+    """
+    Converts a list of lists to a kdb+ table.
+
+    Parameters
+    ----------
+    data_lists : list of lists
+        Data to convert.
+    columns : list, optional
+        Column names.
+
+    Returns
+    -------
+    pykx.Table
+        The resulting kdb+ table.
+    """
     try:
         if not data_lists:
             return kx.q("([] )")
@@ -56,6 +97,21 @@ def _lists_to_table(data_lists, columns=None):
 
 
 def _data_to_table(data, columns=None):
+    """
+    Converts generic data to a kdb+ table.
+
+    Parameters
+    ----------
+    data : any
+        Data to convert.
+    columns : list, optional
+        Column names.
+
+    Returns
+    -------
+    pykx.Table
+        The resulting kdb+ table.
+    """
     try:
         if hasattr(data, '__iter__') and not isinstance(data, (str, dict)):
             data_list = list(data)

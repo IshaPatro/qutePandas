@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 import pykx as kx
@@ -7,9 +6,9 @@ import gc
 import random
 import string
 
-def generate_large_dataset(rows=10_000_000, cols=20, null_percentage=0.1):
-    np.random.seed(42)
-    random.seed(42)
+def generate_large_dataset(rows=10_000_000, cols=20, null_percentage=0.1, seed=42):
+    np.random.seed(seed)
+    random.seed(seed)
     data = {}
     for i in range(cols):
         col_name = f'col_{i}'
@@ -28,12 +27,17 @@ def generate_large_dataset(rows=10_000_000, cols=20, null_percentage=0.1):
             else: df.loc[mask, col] = None
     return df
 
-def benchmark_operation(func, iterations=5, warmup=True):
+def benchmark_operation(func, iterations=5, warmup=True, seed=42):
     if warmup:
-        try: func()
+        try: 
+            np.random.seed(seed)
+            random.seed(seed)
+            func()
         except: pass 
     times = []
-    for _ in range(iterations):
+    for i in range(iterations):
+        np.random.seed(seed + i)
+        random.seed(seed + i)
         gc.collect()
         start = time.perf_counter()
         func()
@@ -76,4 +80,8 @@ def verify_correctness(p, q):
         return False
 
 def calculate_speedup(pd_stats, q_stats):
-    print("  Speedup:", pd_stats['mean'] / q_stats['mean'])
+    speedup = pd_stats['mean'] / q_stats['mean']
+    if speedup < 0.0001:
+        print(f"  Speedup: {speedup:.10f}")
+    else:
+        print(f"  Speedup: {speedup:.4f}")

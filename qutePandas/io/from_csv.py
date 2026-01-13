@@ -1,6 +1,7 @@
 import pykx as kx
 import pandas as pd
 from ..utils import _handle_return
+import pyarrow.csv as pa_csv
 
 def from_csv(path, return_type='q'):
     """
@@ -18,9 +19,9 @@ def from_csv(path, return_type='q'):
     pandas.DataFrame or pykx.Table
         Loaded DataFrame.
     """
-    try:
-        df = pd.read_csv(path)
-        q_table = kx.toq(df)
+    try:       
+        pa_tab = pa_csv.read_csv(path)
+        q_table = kx.toq(pa_tab)
         return _handle_return(q_table, return_type)
     except Exception as e:
         raise RuntimeError(f"Failed to load CSV file {path}: {e}")

@@ -10,7 +10,9 @@ import shutil
 
 
 def _get_project_lic_dir():
-    """Get the project-local license directory."""
+    """
+    Get the project-local license directory.
+    """
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     return os.path.join(root, "kdb_lic")
 
@@ -18,8 +20,18 @@ def _get_project_lic_dir():
 def install_license(content, is_base64=True):
     """
     Installs a kdb+ license from base64 content or file path.
-    Prioritizes project-local folder 'kdb_lic' if it exists.
-    Returns True on success, raises RuntimeError on failure.
+
+    Parameters
+    ----------
+    content : str
+        License content (base64) or file path.
+    is_base64 : bool, default True
+        Whether content is base64 encoded.
+
+    Returns
+    -------
+    bool
+        True if license installation was successful.
     """
     target_dir = _get_project_lic_dir()
     if not os.path.exists(target_dir):
@@ -66,21 +78,23 @@ def install_license(content, is_base64=True):
 def connect(license_path=None):
     """
     Establishes connection to kdb+.
-    Raises RuntimeError if license is invalid or missing.
+
+    Parameters
+    ----------
+    license_path : str, optional
+        Path to the license file or directory.
     """
     if license_path:
         if not os.path.exists(license_path):
             raise RuntimeError(f"License path does not exist: {license_path}")
         os.environ['QLIC'] = license_path
     
-    # Try immediate connection
     try:
         kx.q('1+1')
         return True
     except:
         pass
     
-    # Try token
     token = (os.environ.get('KDB_TOKEN') or os.environ.get('KX_TOKEN', '')).strip()
     if token:
         install_license(token)
@@ -90,7 +104,6 @@ def connect(license_path=None):
         except:
             pass
     
-    # Search paths
     possible_paths = [
         _get_project_lic_dir(),
         os.path.expanduser("~/.qutepandas"),

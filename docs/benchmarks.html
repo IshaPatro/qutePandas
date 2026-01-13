@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>qutePandas | Benchmarks</title>
+    <link rel="icon" type="image/png" href="assets/images/qutePandasLogo.png">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -24,55 +25,179 @@
         </nav>
     </aside>
     <main>
-        <section id="benchmarks">
-            <h2>Benchmarking Results</h2>
+        <section id="benchmarks-header">
+            <h1>Benchmarking Results</h1>
             <p>Performance metrics on <strong>10,000,000 rows</strong>. Speedup factors demonstrate the efficiency of
                 kdb+ offloading for large-scale operations.</p>
+
+            <div class="sub-nav">
+                <a href="#core">Core</a>
+                <a href="#indexing">Indexing</a>
+                <a href="#cleaning">Cleaning</a>
+                <a href="#transformation">Transformation</a>
+                <a href="#grouping">Grouping</a>
+                <a href="#joining">Joining</a>
+                <a href="#io">I/O</a>
+                <a href="#apply">Apply</a>
+                <a href="#introspection">Introspection</a>
+            </div>
+        </section>
+
+        <!-- Core Section -->
+        <section id="core" class="benchmark-section">
+            <h2>Core</h2>
+            <div class="benchmark-grid">
+                <div class="card">
+                    <h4>DataFrame Creation</h4>
+                    <br><br>
+                    <p><small>qutePandas: 1.8157 s</small></p>
+                </div>
+                <div class="card">
+                    <h4>print</h4>
+                    <p>Speedup: <span class="speed-tag">5.9x</span></p>
+                    <p><small>Pandas: 0.0009s | qutePandas: 0.0002s</small></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Indexing Section -->
+        <section id="indexing" class="benchmark-section">
+            <h2>Indexing</h2>
+            <div class="benchmark-grid">
+                <div class="card">
+                    <h4>loc (boolean mask)</h4>
+                    <p>Speedup: <span class="speed-tag">11.0x</span></p>
+                    <p><small>Pandas: 0.54s | qutePandas: 0.0494s</small></p>
+                </div>
+                <div class="card">
+                    <h4>iloc (rows slice)</h4>
+                    <p>Speedup: <span class="speed-tag" style="color: #f85149;">0.0243</span></p>
+                    <p><small>Pandas: 0.0001s | qutePandas: 0.0026s</small></p>
+                </div>
+                <div class="card">
+                    <h4>iloc (cols slice)</h4>
+                    <p>Speedup: <span class="speed-tag">938.1x</span></p>
+                    <p><small>Pandas: 0.13s | qutePandas: 0.0001s</small></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cleaning Section -->
+        <section id="cleaning" class="benchmark-section">
+            <h2>Cleaning</h2>
             <div class="benchmark-grid">
                 <div class="card">
                     <h4>dropna</h4>
-                    <p>Speedup: <span class="speed-tag">11.0x</span></p>
-                    <p><small>Pandas: 1.43s | qpd: 0.13s</small></p>
+                    <p>Speedup: <span class="speed-tag">8.6x</span></p>
+                    <p><small>Pandas: 1.14s | qutePandas: 0.1322s</small></p>
                 </div>
                 <div class="card">
                     <h4>dropna_col</h4>
-                    <p>Speedup: <span class="speed-tag">12.0x</span></p>
-                    <p><small>Pandas: 0.60s | qpd: 0.05s</small></p>
+                    <p>Speedup: <span class="speed-tag">12.4x</span></p>
+                    <p><small>Pandas: 0.62s | qutePandas: 0.0503s</small></p>
                 </div>
                 <div class="card">
                     <h4>fillna</h4>
-                    <p>Speedup: <span class="speed-tag">175x</span></p>
-                    <p><small>Pandas: 0.69s | qpd: 0.004s</small></p>
+                    <p>Speedup: <span class="speed-tag">178.6x</span></p>
+                    <p><small>Pandas: 0.70s | qutePandas: 0.0039s</small></p>
                 </div>
+            </div>
+        </section>
+
+        <!-- Transformation Section -->
+        <section id="transformation" class="benchmark-section">
+            <h2>Transformation</h2>
+            <div class="benchmark-grid">
                 <div class="card">
                     <h4>rename</h4>
-                    <p>Speedup: <span class="speed-tag">8132x</span></p>
-                    <p><small>Pandas: 0.61s | qpd: 0.0001s</small></p>
+                    <p>Speedup: <span class="speed-tag">6183.1x</span></p>
+                    <p><small>Pandas: 0.61s | qutePandas: 0.0001s</small></p>
                 </div>
                 <div class="card">
                     <h4>cast</h4>
-                    <p>Speedup: <span class="speed-tag">6.0x</span></p>
-                    <p><small>Pandas: 0.004s | qpd: 0.0007s</small></p>
+                    <p>Speedup: <span class="speed-tag">6.1x</span></p>
+                    <p><small>Pandas: 0.00s | qutePandas: 0.0007s</small></p>
                 </div>
                 <div class="card">
                     <h4>drop_col</h4>
-                    <p>Speedup: <span class="speed-tag">6589x</span></p>
-                    <p><small>Pandas: 0.55s | qpd: 0.0001s</small></p>
+                    <p>Speedup: <span class="speed-tag">5589.4x</span></p>
+                    <p><small>Pandas: 0.55s | qutePandas: 0.0001s</small></p>
                 </div>
+            </div>
+        </section>
+
+        <!-- Grouping Section -->
+        <section id="grouping" class="benchmark-section">
+            <h2>Grouping</h2>
+            <div class="benchmark-grid">
                 <div class="card">
                     <h4>groupby_sum</h4>
-                    <p>Speedup: <span class="speed-tag">95x</span></p>
-                    <p><small>Pandas: 0.28s | qpd: 0.003s</small></p>
+                    <p>Speedup: <span class="speed-tag">83.3x</span></p>
+                    <p><small>Pandas: 0.29s | qutePandas: 0.0034s</small></p>
                 </div>
                 <div class="card">
                     <h4>groupby_avg</h4>
-                    <p>Speedup: <span class="speed-tag">59x</span></p>
-                    <p><small>Pandas: 0.27s | qpd: 0.005s</small></p>
+                    <p>Speedup: <span class="speed-tag">53.1x</span></p>
+                    <p><small>Pandas: 0.28s | qutePandas: 0.0053s</small></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Joining Section -->
+        <section id="joining" class="benchmark-section">
+            <h2>Joining</h2>
+            <div class="benchmark-grid">
+                <div class="card">
+                    <h4>merge_left</h4>
+                    <p>Speedup: <span class="speed-tag">52.2x</span></p>
+                    <p><small>Pandas: 0.82s | qutePandas: 0.0157s</small></p>
                 </div>
                 <div class="card">
+                    <h4>merge_inner</h4>
+                    <p>Speedup: <span class="speed-tag">11.4x</span></p>
+                    <p><small>Pandas: 0.82s | qutePandas: 0.0721s</small></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- I/O Section -->
+        <section id="io" class="benchmark-section">
+            <h2>I/O</h2>
+            <div class="benchmark-grid">
+
+                <div class="card">
+                    <h4>from_csv</h4>
+                    <p>Speedup: <span class="speed-tag">1.3881</span></p>
+                    <p><small>Pandas: 0.7469s | qutePandas: 0.5381s</small></p>
+                </div>
+                <div class="card">
+                    <h4>to_csv</h4>
+                    <p>Speedup: <span class="speed-tag">2.9667</span></p>
+                    <p><small>Pandas: 4.7015s | qutePandas: 1.5848s</small></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Apply Section -->
+        <section id="apply" class="benchmark-section">
+            <h2>Apply</h2>
+            <div class="benchmark-grid">
+                <div class="card">
                     <h4>apply (row-wise)</h4>
-                    <p>Speedup: <span class="speed-tag" style="color: #f85149;">0.51x</span></p>
-                    <p><small>Pandas: 0.46s | qpd: 0.91s</small></p>
+                    <p>Speedup: <span class="speed-tag" style="color: #f85149;">0.5x</span></p>
+                    <p><small>Pandas: 0.51s | qutePandas: 0.9419s</small></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Introspection Section -->
+        <section id="introspection" class="benchmark-section">
+            <h2>Introspection</h2>
+            <div class="benchmark-grid">
+                <div class="card">
+                    <h4>dtypes</h4>
+                    <p>Speedup: <span class="speed-tag">0.9x</span></p>
+                    <p><small>Pandas: 0.00s | qutePandas: 0.0001s</small></p>
                 </div>
             </div>
         </section>

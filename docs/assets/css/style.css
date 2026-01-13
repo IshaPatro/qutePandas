@@ -791,3 +791,29 @@ ol.setup-checklist li:before {
     color: var(--text-color);
     font-family: var(--font-mono);
 }
+
+/* Benchmark Styles */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--border-color);
+    border-radius: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.benchmark-section {
+    margin-bottom: 60px;
+    scroll-margin-top: 100px;
+    /* Offset for sticky nav */
+}
+
+.benchmark-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+}

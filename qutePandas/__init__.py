@@ -33,7 +33,7 @@ def _setup_environment():
 _setup_environment()
 from .core.dataframe import DataFrame
 from .core.connection import connect, get_license_info, install_license
-from .core.display import py, np, pd, pa, pt
+from .core.display import py, np, pd, pa, pt, print
 
 from .cleaning.dropna import dropna
 from .cleaning.dropna_col import dropna_col
@@ -57,5 +57,7 @@ from .apply.apply import apply
 from .apply.apply_col import apply_col
 
 from .introspection.dtypes import dtypes
+
+from .indexing import loc, iloc
 
 __version__ = "1.0.0"

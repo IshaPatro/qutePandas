@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>qutePandas | Setup Guide</title>
+    <link rel="icon" type="image/png" href="assets/images/qutePandasLogo.png">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -109,22 +110,21 @@
             <div id="step2" class="setup-step">
                 <div class="step-title">
                     <span class="step-number">2</span>
-                    <span>Install PyKX</span>
+                    <span>Install Dependencies</span>
                 </div>
 
                 <p>
-                    PyKX is the Python interface to kdb+. qutePandas uses PyKX under the hood
-                    to communicate with kdb+.
+                    qutePandas relies on several high-performance libraries including PyKX, Pandas, NumPy, and PyArrow.
                 </p>
 
                 <p><strong>Installation steps:</strong></p>
 
                 <ol>
                     <li>Open your terminal or command prompt</li>
-                    <li>Run the following command:</li>
+                    <li>Run the following command to install all required libraries:</li>
                 </ol>
 
-                <div class="code-block">pip install pykx</div>
+                <div class="code-block">pip install pykx pandas numpy pyarrow</div>
 
                 <div class="info-box">
                     <strong>💡 Tip:</strong> If you're using a virtual environment (recommended),
@@ -345,29 +345,7 @@
                     <li>Ensure Python is added to your PATH</li>
                     <li>Try running your terminal/IDE as administrator</li>
                 </ul>
-
-                <div class="info-box">
-                    <strong>💬 Still having issues?</strong>
-                    <ul>
-                        <li>Check the <a href="https://code.kx.com/pykx/" target="_blank">PyKX documentation</a></li>
-                        <li>Visit the <a href="https://github.com/yourusername/qutePandas/issues" target="_blank">GitHub
-                                Issues page</a></li>
-                        <li>Contact support at <a href="mailto:support@qutepandas.com">support@qutepandas.com</a></li>
-                    </ul>
-                </div>
             </div>
-
-            <div class="success-box">
-                <h3>🚀 Next Steps</h3>
-                <p>Now that you have qutePandas installed, you're ready to:</p>
-                <ol>
-                    <li>Explore the <a href="usage.html">API Documentation</a> to learn about available functions</li>
-                    <li>Check out the <a href="benchmarks.html">Benchmarks</a> to see performance comparisons</li>
-                    <li>Try the example notebooks in the <code>tests/</code> directory</li>
-                    <li>Start building your own high-performance data pipelines!</li>
-                </ol>
-            </div>
-
         </section>
 
         <footer>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>qutePandas | API Reference</title>
+    <link rel="icon" type="image/png" href="assets/images/qutePandasLogo.png">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -31,6 +32,7 @@
 
         <div class="sub-nav">
             <a href="#core" class="active">Core</a>
+            <a href="#indexing">Indexing</a>
             <a href="#cleaning">Cleaning</a>
             <a href="#transformation">Transformation</a>
             <a href="#grouping">Grouping</a>
@@ -153,6 +155,131 @@ qpd.connect()</code></pre>
                         <span class="doc-label">Example</span>
                         <pre><code>import qutePandas as qpd
 qpd.install_license("YOUR_LICENSE_CONTENT")</code></pre>
+                    </div>
+                </div>
+
+                <div class="function-card" id="print">
+                    <div class="function-header">
+                        <span class="function-name">print(obj, head=None, tail=None)</span>
+                        <span class="pandas-resemblance">print(df.head()) / print(df.tail())</span>
+                    </div>
+                    <div class="function-description">
+                        Display a kdb+ table with formatted output including borders and column alignment.
+                        Avoids converting to pandas for better performance.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">obj</span><span class="param-type">pykx.Table or
+                                    pykx.KeyedTable</span></td>
+                            <td>The table to display.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">head</span><span class="param-type">int</span></td>
+                            <td>Number of rows from the beginning to display. If specified, <code>tail</code> is
+                                ignored.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">tail</span><span class="param-type">int</span></td>
+                            <td>Number of rows from the end to display.</td>
+                        </tr>
+                    </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+df = qpd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30]})
+qpd.print(df, head=5)
+qpd.print(df, tail=3)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indexing Section -->
+            <div class="api-section" id="indexing" data-category="indexing">
+                <h2>Indexing & Selection</h2>
+
+                <div class="function-card" id="loc">
+                    <div class="function-header">
+                        <span class="function-name">loc(df, rows=None, cols=None, return_type='q')</span>
+                        <span class="pandas-resemblance">df.loc[rows, cols]</span>
+                    </div>
+                    <div class="function-description">
+                        Pure label-location based indexing for selection by label (or boolean array).
+                        Currently supports filtering rows via boolean mask.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">rows</span><span class="param-type">list or
+                                    pykx.BooleanVector</span></td>
+                            <td>Boolean mask or labels for row selection.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">cols</span><span class="param-type">str or list of str</span>
+                            </td>
+                            <td>Column names to select.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+mask = qpd.kx.q('>', df['price'], 100)
+df_subset = qpd.loc(df, rows=mask, cols=['symbol', 'volume'])</code></pre>
+                    </div>
+                </div>
+
+                <div class="function-card" id="iloc">
+                    <div class="function-header">
+                        <span class="function-name">iloc(df, rows=None, cols=None, return_type='q')</span>
+                        <span class="pandas-resemblance">df.iloc[rows, cols]</span>
+                    </div>
+                    <div class="function-description">
+                        Pure integer-location based indexing for selection by position.
+                    </div>
+
+                    <span class="doc-label">Parameters</span>
+                    <table class="params-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">rows</span><span class="param-type">int, list, or slice</span>
+                            </td>
+                            <td>Row indices to select.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">cols</span><span class="param-type">int, list, or slice</span>
+                            </td>
+                            <td>Column indices to select.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
+                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
+                        </tr>
+                    </table>
+
+                    <div class="example-block">
+                        <span class="doc-label">Example</span>
+                        <pre><code>import qutePandas as qpd
+# Select first 10 rows and first 2 columns
+df_subset = qpd.iloc(df, rows=slice(0, 10), cols=slice(0, 2))</code></pre>
                     </div>
                 </div>
             </div>
@@ -788,7 +915,11 @@ schema = qpd.dtypes(df)</code></pre>
         </div>
 
         <footer>
-            <p>&copy; 2026 qutePandas Team. Engineer-first documentation for high-performance data engineering.</p>
+            <p>
+                &copy; 2026 qutePandas. Focused on speed, built on kdb+.
+                <span class="dot">·</span>
+                Created by <a href="https://ishapatro.in/" target="_blank" rel="noopener noreferrer">Isha Patro</a>
+            </p>
         </footer>
     </main>
 

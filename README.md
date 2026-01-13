@@ -18,9 +18,9 @@ qutePandas/
 ├── utils.py                 # Utilities for dataset generation and benchmarking
 ├── cleaning/                # Data cleaning operations
 │   ├── __init__.py         # Module exports
-│   ├── drop_nulls.py       # Remove null rows
-│   ├── drop_nulls_col.py   # Remove nulls from specific column
-│   ├── fill_null.py        # Fill null values
+│   ├── dropna.py           # Remove null rows
+│   ├── dropna_col.py       # Remove nulls from specific column
+│   ├── fillna.py           # Fill null values
 │   └── remove_duplicates.py # Remove duplicate rows
 ├── transformation/          # Data transformation operations
 │   ├── __init__.py
@@ -58,7 +58,7 @@ Each function follows these principles:
 ### Example Function Structure
 
 ```python
-def drop_nulls(df):
+def dropna(df):
     """
     Removes all rows from the DataFrame that contain null values in any column.
 
@@ -75,9 +75,9 @@ def drop_nulls(df):
     Example
     -------
     >>> import pandas as pd
-    >>> from qutePandas.cleaning.drop_nulls import drop_nulls
+    >>> from qutePandas.cleaning.dropna import dropna
     >>> df = pd.DataFrame({'a': [1, 2, None, 4], 'b': ['x', 'y', None, 'z']})
-    >>> drop_nulls(df)
+    >>> dropna(df)
        a  b
     0  1  x
     1  2  y
@@ -94,6 +94,9 @@ def drop_nulls(df):
 # Create virtual environment
 python -m venv venvQutePandas
 source venvQutePandas/bin/activate  # On Windows: venvQutePandas\Scripts\activate
+
+# Install dependencies
+pip install pykx pandas numpy pyarrow
 
 # Install qutePandas in development mode
 pip install -e .
@@ -163,9 +166,9 @@ print(f"Speedup: {results['speedup']:.2f}x")
 ## 📊 Features
 
 ### Data Cleaning
-- **drop_nulls**: Remove rows with any null values
-- **drop_nulls_col**: Remove rows with nulls in specific column
-- **fill_null**: Fill null values with specified value
+- **dropna**: Remove rows with any null values
+- **dropna_col**: Remove rows with nulls in specific column
+- **fillna**: Fill null values with specified value
 - **remove_duplicates**: Remove duplicate rows
 
 ### Data Transformation
