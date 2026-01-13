@@ -44,8 +44,7 @@ from .transformation.cast import cast
 from .transformation.drop_col import drop_col
 from .transformation.rename import rename
 
-from .joining.merge_left import merge_left
-from .joining.merge_inner import merge_inner
+from .joining.merge import merge
 
 from .grouping.groupby_sum import groupby_sum
 from .grouping.groupby_avg import groupby_avg

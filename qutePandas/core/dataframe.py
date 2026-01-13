@@ -24,13 +24,7 @@ def DataFrame(data, columns=None):
     """
     try:
         if isinstance(data, pd.DataFrame):
-            obj_cols = [c for c in data.columns if data[c].dtype == 'object']
-            if obj_cols:
-                d = {str(c): data[c].values if c not in obj_cols else data[c].astype('category').values 
-                     for c in data.columns}
-                q_res = kx.q('flip', kx.toq(d))
-            else:
-                q_res = kx.toq(data)
+            q_res = kx.toq(data)
         elif isinstance(data, (kx.Table, kx.KeyedTable)):
             q_res = data
         elif isinstance(data, dict):

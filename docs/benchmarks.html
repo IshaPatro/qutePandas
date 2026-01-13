@@ -148,14 +148,24 @@
             <h2>Joining</h2>
             <div class="benchmark-grid">
                 <div class="card">
-                    <h4>merge_left</h4>
-                    <p>Speedup: <span class="speed-tag">52.2x</span></p>
-                    <p><small>Pandas: 0.82s | qutePandas: 0.0157s</small></p>
+                    <h4>merge (left)</h4>
+                    <p>Speedup: <span class="speed-tag">46.7727x</span></p>
+                    <p><small>Pandas: 0.8145s | qutePandas: 0.0174s</small></p>
                 </div>
                 <div class="card">
-                    <h4>merge_inner</h4>
-                    <p>Speedup: <span class="speed-tag">11.4x</span></p>
-                    <p><small>Pandas: 0.82s | qutePandas: 0.0721s</small></p>
+                    <h4>merge (inner)</h4>
+                    <p>Speedup: <span class="speed-tag">10.9496x</span></p>
+                    <p><small>Pandas: 0.7914s | qutePandas: 0.0723s</small></p>
+                </div>
+                <div class="card">
+                    <h4>merge (right)</h4>
+                    <p>Speedup: <span class="speed-tag">51.4244x</span></p>
+                    <p><small>Pandas: 3.0659s | qutePandas: 0.0596s</small></p>
+                </div>
+                <div class="card">
+                    <h4>merge (outer)</h4>
+                    <p>Speedup: <span class="speed-tag">25.9505x</span></p>
+                    <p><small>Pandas: 3.0630s | qutePandas: 0.1180s</small></p>
                 </div>
             </div>
         </section>
@@ -164,7 +174,6 @@
         <section id="io" class="benchmark-section">
             <h2>I/O</h2>
             <div class="benchmark-grid">
-
                 <div class="card">
                     <h4>from_csv</h4>
                     <p>Speedup: <span class="speed-tag">1.3881</span></p>

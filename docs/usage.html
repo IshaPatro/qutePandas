@@ -637,15 +637,17 @@ res = qpd.groupby_avg(df, by_cols=['region', 'year'], avg_col='sales')</code></p
             <div class="api-section" id="joining" data-category="joining">
                 <h2>Joining</h2>
 
-                <div class="function-card" id="merge_left">
+                <div class="function-card" id="merge">
                     <div class="function-header">
-                        <span class="function-name">merge_left(left, right, keys, return_type='q')</span>
-                        <span class="pandas-resemblance">pd.merge(how='left')</span>
+                        <span class="function-name">merge(left, right, how='inner', on=None, left_on=None,
+                            right_on=None, return_type='q')</span>
+                        <span class="pandas-resemblance">pd.merge()</span>
                     </div>
                     <div class="function-description">
-                        Enriches a primary dataset with attributes from a lookup table. Records in the <code>left</code>
-                        table are preserved, while matching data from the <code>right</code> table is appended based on
-                        the specified keys.
+                        Unifies multiple join strategies (inner, left, right, outer) into a single pandas-compliant
+                        interface. This operation leverages kdb+'s specialized join primitives (e.g., <code>ij</code>,
+                        <code>lj</code>, <code>uj</code>) to perform high-speed table intersections and unions without
+                        leaving the vector engine.
                     </div>
 
                     <span class="doc-label">Parameters</span>
@@ -656,48 +658,21 @@ res = qpd.groupby_avg(df, by_cols=['region', 'year'], avg_col='sales')</code></p
                         </tr>
                         <tr>
                             <td><span class="param-name">left, right</span><span class="param-type">Source</span></td>
-                            <td>The two qutePandas or PyKX tables to be joined.</td>
+                            <td>The two qutePandas or PyKX tables to be merged.</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">keys</span><span class="param-type">str or list</span></td>
-                            <td>The common column(s) used for the join operation. These must exist in both tables.</td>
+                            <td><span class="param-name">how</span><span class="param-type">str</span></td>
+                            <td>Type of merge: <code>'inner'</code>, <code>'left'</code>, <code>'right'</code>, or
+                                <code>'outer'</code>.</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
-                            <td>Controls the output format: <code>'q'</code> or <code>'p'</code>.</td>
-                        </tr>
-                    </table>
-
-                    <div class="example-block">
-                        <span class="doc-label">Example</span>
-                        <pre><code>import qutePandas as qpd
-enriched = qpd.merge_left(left_df, right_df, keys='user_id')</code></pre>
-                    </div>
-                </div>
-
-                <div class="function-card" id="merge_inner">
-                    <div class="function-header">
-                        <span class="function-name">merge_inner(left, right, keys, return_type='q')</span>
-                        <span class="pandas-resemblance">pd.merge(how='inner')</span>
-                    </div>
-                    <div class="function-description">
-                        Intersects two datasets to find matching records across sources. This is highly optimized by
-                        kdb+'s hash-join architecture, providing near-linear performance scaling with data size.
-                    </div>
-
-                    <span class="doc-label">Parameters</span>
-                    <table class="params-table">
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
+                            <td><span class="param-name">on</span><span class="param-type">str or list</span></td>
+                            <td>Column name(s) to join on. Must be found in both tables.</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">left, right</span><span class="param-type">Source</span></td>
-                            <td>The tables to join.</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">keys</span><span class="param-type">str or list</span></td>
-                            <td>The join key columns.</td>
+                            <td><span class="param-name">left_on, right_on</span><span class="param-type">str or
+                                    list</span></td>
+                            <td>Specific column names to join on in the left and right tables respectively.</td>
                         </tr>
                         <tr>
                             <td><span class="param-name">return_type</span><span class="param-type">str</span></td>
@@ -708,7 +683,11 @@ enriched = qpd.merge_left(left_df, right_df, keys='user_id')</code></pre>
                     <div class="example-block">
                         <span class="doc-label">Example</span>
                         <pre><code>import qutePandas as qpd
-intersected = qpd.merge_inner(df_a, df_b, keys=['order_id', 'date'])</code></pre>
+# Inner join on common key
+res = qpd.merge(df_a, df_b, on='id', how='inner')
+
+# Left join with different key names
+res = qpd.merge(df_a, df_b, left_on='user_id', right_on='uid', how='left')</code></pre>
                     </div>
                 </div>
             </div>
