@@ -40,7 +40,6 @@ def merge(left, right, how='inner', on=None, left_on=None, right_on=None, left_i
         q_right = _ensure_q_table(right)
 
         if on is None and left_on is None and right_on is None:
-            # Try to find common columns
             left_cols = set(kx.q("cols", q_left).py())
             right_cols = set(kx.q("cols", q_right).py())
             common = list(left_cols.intersection(right_cols))
@@ -57,9 +56,15 @@ def merge(left, right, how='inner', on=None, left_on=None, right_on=None, left_i
             r_keys = [r_keys]
 
         if l_keys != r_keys:
-            rename_needed = {old: new for old, new in zip(r_keys, l_keys) if old != new}
-            if rename_needed:
-                q_right = kx.q("xcol", rename_needed, q_right)
+            update_clauses = []
+            for lk, rk in zip(l_keys, r_keys):
+                if lk != rk:
+                    update_clauses.append(f"{lk}:{rk}")
+            
+            if update_clauses:
+                update_str = ",".join(update_clauses)
+                q_right = kx.q(f"{{update {update_str} from x}}", q_right)
+            
             r_keys = l_keys
 
         key_cols = "`" + "`".join(l_keys)

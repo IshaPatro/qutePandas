@@ -46,37 +46,47 @@ def benchmark_operation(func, iterations=5, warmup=True, seed=42):
     return {'mean': np.mean(times)}
 
 def verify_correctness(p, q):
-    if hasattr(q, 'pd'): q = q.pd()
-    if p is None or q is None: return p == q
-    
+    if hasattr(q, 'pd'):
+        q = q.pd()
+    if p is None or q is None:
+        return p == q
+
     def _norm(obj):
-        if not isinstance(obj, (pd.Series, pd.DataFrame)): return obj
+        if not isinstance(obj, (pd.Series, pd.DataFrame)):
+            return obj
+
         res = obj.copy()
+
         if isinstance(res, pd.Series):
-            idx = [str(x) if (x is not None and str(x) != 'nan' and str(x) != '') else 'nan_ext' for x in res.index]
+            idx = [
+                str(x) if (x is not None and str(x) not in ('nan', '')) else 'nan_ext'
+                for x in res.index
+            ]
             res.index = idx
             res = res.sort_index()
-            if res.dtype.name in ['Int64', 'Int32', 'Float64', 'boolean', 'float64', 'int64']:
-                res = pd.Series(res.to_numpy(dtype=float, na_value=np.nan), index=res.index)
-            elif res.dtype == 'object':
-                res = res.replace("", None).fillna(np.nan)
+
+            if res.dtype == 'object':
+                res = res.replace("", None)
+
+            res = pd.to_numeric(res, errors="coerce")
             return res.reset_index(drop=True)
+
         else:
             for c in res.columns:
-                if res[c].dtype.name in ['Int64', 'Int32', 'Float64', 'boolean', 'float64', 'int64']:
-                    res[c] = res[c].to_numpy(dtype=float, na_value=np.nan)
-                elif res[c].dtype == 'object':
-                    res[c] = res[c].replace("", None).fillna(np.nan)
+                if res[c].dtype == 'object':
+                    res[c] = res[c].replace("", None)
+                res[c] = pd.to_numeric(res[c], errors="coerce")
             return res.reset_index(drop=True)
-            
+
     p_n, q_n = _norm(p), _norm(q)
+
     try:
-        if isinstance(p_n, pd.Series): 
+        if isinstance(p_n, pd.Series):
             pd.testing.assert_series_equal(p_n, q_n, check_dtype=False, atol=1e-5)
-        else: 
+        else:
             pd.testing.assert_frame_equal(p_n, q_n, check_dtype=False, check_like=True, atol=1e-5)
         return True
-    except: 
+    except:
         return False
 
 def calculate_speedup(pd_stats, q_stats):
