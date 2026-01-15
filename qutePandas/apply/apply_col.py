@@ -26,6 +26,8 @@ def apply_col(df, col, func, return_type='q'):
     """
     try:
         q_table = _ensure_q_table(df)
+        if len(q_table) == 0:
+            return _handle_return(q_table, return_type)
         
         if isinstance(func, str):
             result = kx.q(f"{{update {col}:({func}) each {col} from x}}", q_table)

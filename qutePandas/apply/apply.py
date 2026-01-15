@@ -26,17 +26,29 @@ def apply(df, func, axis=0, return_type='q'):
     try:
         q_table = _ensure_q_table(df)
         
+        if len(q_table) == 0:
+            if axis == 1:
+                return _handle_return(kx.toq([]), return_type)
+            if not isinstance(func, str):
+                pdf = df if isinstance(df, pd.DataFrame) else q_table.pd()
+                return pdf.apply(func, axis=axis)
+            elif func == "sum":
+                cols = kx.q("cols", q_table).py()
+                result = kx.toq({c: 0 for c in cols})
+                ret = _handle_return(result, return_type)
+                return pd.Series(ret) if return_type == 'p' else ret
+
         if isinstance(func, str):
             if axis == 1:
                 result = kx.q(f"{{({func}) each x}}", q_table)
             else:
                 result = kx.q(f"{{({func}) each flip x}}", q_table)
                 
-            return _handle_return(result, return_type)
+
         else:
             if axis == 1:
-                rows = kx.q("{(x)}", q_table)
-                res_list = [func(row.pd()) for row in rows]
+                pdf = q_table.pd()
+                res_list = [func(row) for _, row in pdf.iterrows()]
                 result = kx.toq(res_list)
                 
             else:
@@ -49,7 +61,10 @@ def apply(df, func, axis=0, return_type='q'):
                     
                 result = kx.toq(res_dict)
             
-            return _handle_return(result, return_type)
+        ret = _handle_return(result, return_type)
+        if return_type == 'p' and isinstance(ret, dict):
+            return pd.Series(ret)
+        return ret
 
     except Exception as e:
         raise RuntimeError(f"Failed to apply function: {e}")
