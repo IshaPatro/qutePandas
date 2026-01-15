@@ -1,5 +1,5 @@
 import pykx as kx
-import pandas as pd
+import pandas as _pd
 import builtins
 
 def py(obj):
@@ -111,6 +111,24 @@ def print(obj, head=None, tail=None):
         Number of rows to show from the end.
     """
     try:
+        if isinstance(obj, _pd.DataFrame):
+            if len(obj.columns) == 0:
+                builtins.print("Empty DataFrame")
+                return
+
+        if isinstance(obj, kx.Dictionary):
+            try:
+                is_empty = kx.q('{(0=count key x) and (0=count value x)}', obj).py()
+                if is_empty:
+                    builtins.print("Empty DataFrame")
+                    return
+                else:
+                     builtins.print(obj)
+                     return
+            except:
+                 builtins.print(obj)
+                 return
+
         if isinstance(obj, (kx.Table, kx.KeyedTable)):
             if head is not None:
                 table = kx.q('{[t;n] n sublist t}', obj, head)
@@ -121,7 +139,7 @@ def print(obj, head=None, tail=None):
             
             cols = kx.q('cols', table).py()
             if len(cols) == 0:
-                builtins.print("Empty table")
+                builtins.print("Empty Table")
                 return
             
             rows_data = []
@@ -160,6 +178,6 @@ def print(obj, head=None, tail=None):
             
             builtins.print(bot_border)
         else:
-            raise ValueError("Input must be a pykx Table or KeyedTable")
+            builtins.print(obj)
     except Exception as e:
         raise RuntimeError(f"Failed to print table: {e}")
