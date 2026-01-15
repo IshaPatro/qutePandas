@@ -26,9 +26,9 @@ def loc(df, rows=None, cols=None, return_type='q'):
     q_rows = None
     if rows is not None:
         if isinstance(rows, list):
-             q_rows = kx.toq(rows, ktype=kx.BooleanAtom)
+            q_rows = kx.toq(rows)
         else:
-             q_rows = rows
+            q_rows = rows
              
     q_cols = None
     if cols is not None:
