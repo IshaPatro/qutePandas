@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qutePandas"
+version = "1.0.0"
+authors = [
+  { name="Isha Patro", email="ishapatro21@gmail.com" },
+]
+description = "A pandas-like library for kdb+/q using pykx"
+readme = "README.md"
+license-files = []
+keywords = ["kdb+", "q", "pandas", "data analysis", "timeseries", "finance"]
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Database",
+]
+dependencies = [
+    "pykx>=2.0.0",
+    "pandas>=1.3.0",
+    "numpy>=1.20.0",
+    "pyarrow>=10.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://ishapatro.github.io/qutePandas/"
+"Bug Tracker" = "https://github.com/ishapatro/qutePandas/issues"
+"Documentation" = "https://ishapatro.github.io/qutePandas/"
+
+[tool.setuptools]
+packages = ["qutePandas"]
+
+[tool.setuptools.package-data]
+qutePandas = ["*.q"]

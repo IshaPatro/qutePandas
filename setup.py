@@ -13,12 +13,12 @@ setup(
         'numpy>=1.20.0',
         'pyarrow>=10.0.0',
     ],
-    author="qutePandas Development Team",
-    author_email="qutepandas@example.com",
+    author="Isha Patro",
+    author_email="ishapatro21@gmail.com",
     description="A pandas-like library for kdb+/q using pykx",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/qutepandas/qutepandas",
+    url="https://ishapatro.github.io/qutePandas/",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
@@ -31,5 +31,5 @@ setup(
         "Topic :: Database",
     ],
     python_requires='>=3.7',
-    keywords="kdb+, q, pandas, data analysis, timeseries, finance",
+    license_files=[],
 )
