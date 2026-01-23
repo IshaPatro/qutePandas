@@ -62,7 +62,6 @@ def check_license_files():
             found_licenses.append(str(loc))
             print(f"  Found: {loc}")
     
-    # Check environment variables
     qlic = os.environ.get('QLIC')
     kx_token = os.environ.get('KX_TOKEN') or os.environ.get('KDB_TOKEN')
     pykx_unlicensed = os.environ.get('PYKX_UNLICENSED')
