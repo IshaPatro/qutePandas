@@ -241,6 +241,86 @@ except Exception as e:
 
 ## Troubleshooting
 
+### Critical Issue: `licence error: embedq`
+
+> [!IMPORTANT]
+> **This is the most common PyKX error with qutePandas**
+
+**Symptoms**:
+```
+PyKXException: Non-zero qinit following license install with configuration:
+{
+  'qhome': '/path/to/pykx/lib',
+  'qlic': PosixPath('/path/to/kc.lic')
+}
+
+failed with output:
+'2026.01.22T10:33:12.922 licence error: embedq'
+```
+
+**Root Cause**:
+PyKX initializes an embedded q process when imported. This error occurs when:
+1. The license file doesn't support embedded q mode
+2. Environment variables aren't set before PyKX imports
+3. No valid license is found and unlicensed mode isn't enabled
+
+**Solution 1: Enable Unlicensed Mode (Recommended for Development)**
+
+qutePandas 1.0.0+ automatically enables unlicensed mode if no license is found. If you're using an older version or need to force it:
+
+```bash
+# Set environment variable
+export PYKX_UNLICENSED=true
+
+# Add to ~/.zshrc or ~/.bashrc for persistence
+echo 'export PYKX_UNLICENSED=true' >> ~/.zshrc
+source ~/.zshrc
+
+# Restart Python and try again
+python -c "import qutePandas as qpd; print('Success!')"
+```
+
+**Solution 2: Use a Valid Embedded Q License**
+
+If you have a commercial kdb+ license that supports embedded q:
+
+```bash
+# Place license in the correct location
+mkdir -p ~/.qutepandas
+cp /path/to/your/kc.lic ~/.qutepandas/
+
+# Verify it's there
+ls -la ~/.qutepandas/kc.lic
+
+# Restart Python
+python -c "import qutePandas as qpd; print('Success!')"
+```
+
+**Solution 3: Use License Token**
+
+If you have a base64-encoded license token:
+
+```bash
+# Set environment variable
+export KX_TOKEN="your-base64-token-here"
+
+# Or add to .env file in project root
+echo 'KX_TOKEN="your-base64-token-here"' >> .env
+```
+
+**Verification**:
+
+Run the standalone test file to verify your setup:
+
+```bash
+cd /path/to/qutePandas
+python tests/test_pykx_setup.py
+```
+
+This will check your license configuration and verify PyKX + qutePandas are working correctly.
+
+---
+
 ### Common Issues and Solutions
 
 #### 1. "No valid q license found"

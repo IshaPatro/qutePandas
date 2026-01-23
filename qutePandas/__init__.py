@@ -3,9 +3,14 @@ qutePandas - A pandas-like library for q/kdb+
 """
 
 import os
+import sys
 
-def _setup_environment():
-    """Validates and sets up the environment for PyKX."""
+def _setup_pykx_environment():
+    """
+    Sets up the environment for PyKX BEFORE any PyKX imports.
+    This must run before importing any module that uses PyKX.
+    """
+    # Load environment variables from .env file
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     env_path = os.path.join(root, ".env")
     
@@ -20,17 +25,58 @@ def _setup_environment():
                     if len(parts) == 2:
                         key, value = parts
                         value = value.strip().strip('"').strip("'")
+                        # Only set if not already in environment
                         if key.strip() and key.strip() not in os.environ:
                             os.environ[key.strip()] = value
-
+    
+    # Check for valid license files in priority order
     qutepandas_home = os.path.expanduser("~/.qutepandas")
     local_kdb = os.path.join(root, "kdb_lic")
+    
+    license_found = False
+    valid_license_path = None
+    
+    # Priority 1: Local project license
     if os.path.exists(os.path.join(local_kdb, "kc.lic")):
-        os.environ['QLIC'] = local_kdb
+        valid_license_path = local_kdb
+        license_found = True
+    # Priority 2: User home qutepandas license
     elif os.path.exists(os.path.join(qutepandas_home, "kc.lic")):
-        os.environ['QLIC'] = qutepandas_home
+        valid_license_path = qutepandas_home
+        license_found = True
+    
+    # If we found a valid license in our preferred locations, use it
+    if license_found and valid_license_path:
+        os.environ['QLIC'] = valid_license_path
+    # Otherwise, check if QLIC is already set and points to a valid license
+    elif 'QLIC' in os.environ:
+        qlic_path = os.environ['QLIC']
+        # Verify the QLIC path actually has a license file
+        if not (os.path.exists(os.path.join(qlic_path, "kc.lic")) or 
+                os.path.exists(os.path.join(qlic_path, "k4.lic"))):
+            # QLIC is set but doesn't have a valid license - unset it and use unlicensed mode
+            del os.environ['QLIC']
+            if 'QHOME' in os.environ:
+                del os.environ['QHOME']
+            license_found = False
+    
+    # If no valid license found, enable unlicensed mode
+    if not license_found and 'PYKX_UNLICENSED' not in os.environ:
+        os.environ['PYKX_UNLICENSED'] = 'true'
+    
+    # Additional PyKX configuration for better performance and compatibility
+    if 'PYKX_RELEASE_GIL' not in os.environ:
+        os.environ['PYKX_RELEASE_GIL'] = 'true'
+    
+    # Disable strict embedded import enforcement
+    if 'PYKX_ENFORCE_EMBEDDED_IMPORT' not in os.environ:
+        os.environ['PYKX_ENFORCE_EMBEDDED_IMPORT'] = '0'
 
-_setup_environment()
+# CRITICAL: Set up environment BEFORE any imports that use PyKX
+_setup_pykx_environment()
+
+
+# Now safe to import modules that use PyKX
 from .core.dataframe import DataFrame
 from .core.connection import connect, get_license_info, install_license
 from .core.display import py, np, pd, pa, pt, print

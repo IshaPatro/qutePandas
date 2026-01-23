@@ -1,10 +1,7 @@
 import pykx as kx
 import pandas as pd
-import os
 import atexit
 from ..utils import _handle_return
-
-os.environ['PYKX_ENFORCE_EMBEDDED_IMPORT'] = '0'
 
 def DataFrame(data, columns=None):
     """
