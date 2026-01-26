@@ -131,6 +131,24 @@ source ~/.zshrc
 
 ---
 
+### Step 5: Enable Embedded q (Required for pykx.q)
+
+qutePandas uses PyKX with an embedded q process.  
+To allow Python to execute q expressions via `pykx.q`, the following flags **must be enabled**.
+
+These are typically set automatically, but in some environments they may default to `False`.
+
+Run the following in a Python REPL:
+
+```python
+import insights.lib
+
+insights.lib.embedq = True
+insights.lib.pykx = True
+```
+
+---
+
 ## 🧪 Running Tests
 
 ### Verification Test
