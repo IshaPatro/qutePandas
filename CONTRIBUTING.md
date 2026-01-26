@@ -321,66 +321,8 @@ All contributions MUST include documentation:
 
 ### 1. Docstrings
 
-Every function must have a comprehensive docstring following NumPy style:
+Every function must have a comprehensive docstring.
 
-```python
-def function_name(table, param1, param2, return_type='p'):
-    """
-    Brief one-line description of what the function does.
-    
-    Longer description explaining the function's purpose, behavior,
-    and any important implementation details. Mention how it compares
-    to the pandas equivalent.
-    
-    Parameters
-    ----------
-    table : pykx.Table
-        The input table to operate on.
-    param1 : type
-        Description of param1.
-    param2 : type
-        Description of param2.
-    return_type : str, default 'p'
-        Return type: 'p' for pandas DataFrame, 'q' for PyKX Table.
-    
-    Returns
-    -------
-    pd.DataFrame or pykx.Table
-        Description of the return value. Explain what the output
-        represents and its structure.
-    
-    Raises
-    ------
-    ValueError
-        If invalid parameters are provided.
-    TypeError
-        If table is not a PyKX Table.
-    
-    See Also
-    --------
-    related_function : Brief description of related function.
-    
-    Notes
-    -----
-    Any important notes about the implementation, performance
-    characteristics, or differences from pandas behavior.
-    
-    Examples
-    --------
-    >>> import qutePandas as qpd
-    >>> import pandas as pd
-    >>> 
-    >>> # Create a sample DataFrame
-    >>> df = qpd.DataFrame({
-    ...     'A': [1, 2, 3, 4],
-    ...     'B': [5, 6, 7, 8]
-    ... })
-    >>> 
-    >>> # Use the function
-    >>> result = qpd.function_name(df, param1='value')
-    >>> print(result)
-    """
-```
 
 ### 2. Code Comments
 
@@ -429,51 +371,6 @@ All new functions MUST include performance benchmarks in `tests/benchmark_tests.
 
 3. **Add benchmark code** in a new cell:
 
-```python
-import time
-import pandas as pd
-import numpy as np
-import qutePandas as qpd
-
-print("Benchmarking: your_function_name")
-print("=" * 50)
-
-sizes = [100_000, 1_000_000, 10_000_000]
-results = []
-
-for size in sizes:
-    # Create test data
-    pdf = pd.DataFrame({
-        'A': np.random.randint(0, 100, size),
-        'B': np.random.randn(size),
-        'C': np.random.choice(['X', 'Y', 'Z'], size)
-    })
-    qdf = qpd.DataFrame(pdf)
-    
-    # Benchmark pandas
-    start = time.perf_counter()
-    pandas_result = pdf.your_pandas_equivalent()
-    pandas_time = time.perf_counter() - start
-    
-    # Benchmark qutePandas
-    start = time.perf_counter()
-    qpd_result = qpd.your_function(qdf, return_type='p')
-    qpd_time = time.perf_counter() - start
-    
-    # Verify correctness
-    assert pandas_result.equals(qpd_result), f"Results don't match for size {size}"
-    
-    # Calculate speedup
-    speedup = pandas_time / qpd_time
-    
-    print(f"Size: {size:,}")
-    print(f"  Pandas:      {pandas_time:.4f}s")
-    print(f"  qutePandas:  {qpd_time:.4f}s")
-    print(f"  Speedup:     {speedup:.2f}x")
-    print()
-
-print("✅ Benchmark completed!")
-```
 
 ### What to Benchmark
 
