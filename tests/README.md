@@ -140,7 +140,7 @@ These are typically set automatically, but in some environments they may default
 
 Run the following in a Python REPL:
 
-```python
+```python 
 import insights.lib
 
 insights.lib.embedq = True
