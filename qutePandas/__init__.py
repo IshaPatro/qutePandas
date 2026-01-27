@@ -89,4 +89,4 @@ from .introspection.dtypes import dtypes
 
 from .indexing import loc, iloc
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
