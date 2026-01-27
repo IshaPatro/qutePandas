@@ -1,4 +1,3 @@
-iloc.py
 import pykx as kx
 from ..utils import _ensure_q_table, _handle_return, _validate_columns
 
