@@ -36,6 +36,19 @@ print(res)
 Full documentation, including API reference and performance benchmarks, is available at:
 [https://ishapatro.github.io/qutePandas/](https://ishapatro.github.io/qutePandas/)
 
+## GitHub
+
+The source code for this project is available on GitHub at:
+[https://github.com/ishapatro/qutePandas](https://github.com/ishapatro/qutePandas)
+
+## Contributing
+
+Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+
+## License
+
+MIT License
+
 ## Author
 
 Created by [Isha Patro](https://ishapatro.in)
