@@ -43,7 +43,7 @@ The source code for this project is available on GitHub at:
 
 ## Contributing
 
-Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+Contributions are welcome! Please read our [CONTRIBUTING.md](https://github.com/IshaPatro/qutePandas/blob/main/CONTRIBUTING.md) for more information.
 
 ## License
 
