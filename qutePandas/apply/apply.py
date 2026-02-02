@@ -2,10 +2,6 @@ import pykx as kx
 import pandas as pd
 from ..utils import _ensure_q_table, _handle_return
 
-_VECTORIZED_AXIS1 = {
-    'sum': '{sum (0^) each value flip x}',
-}
-
 
 def apply(df, func, axis=0, return_type='q'):
     """
@@ -43,9 +39,7 @@ def apply(df, func, axis=0, return_type='q'):
                 return pd.Series(ret) if return_type == 'p' else ret
 
         if isinstance(func, str):
-            if axis == 1 and func in _VECTORIZED_AXIS1:
-                result = kx.q(_VECTORIZED_AXIS1[func], q_table)
-            elif axis == 1:
+            if axis == 1:
                 result = kx.q(f"{{({func}) each x}}", q_table)
             else:
                 result = kx.q(f"{{({func}) each flip x}}", q_table)

@@ -65,254 +65,67 @@
                     get kdb+ speed.</p>
             </div>
 
-            <div class="content-box">
-                <h3>Memory Overhead</h3>
-                <ul class="feature-list">
-                    <li><strong>Eager materialization:</strong> Every intermediate operation allocates a new DataFrame,
-                        creating multiple full copies of the dataset in memory</li>
-                    <li><strong>Python object overhead:</strong> String and mixed-type columns store Python objects with
-                        per-element allocation overhead, often 2-10x larger than raw data</li>
-                    <li><strong>No memory mapping:</strong> Data must be loaded entirely into RAM. Multi-gigabyte CSVs
-                        require full deserialization before any operation can begin</li>
-                </ul>
-            </div>
+            <h2>Execution Pipeline Comparison</h2>
 
-            <div class="content-box">
-                <h3>Execution Model</h3>
-                <ul class="feature-list">
-                    <li><strong>Row-major layout:</strong> Operations that touch entire columns (aggregations, type
-                        conversions, filters) must traverse memory inefficiently</li>
-                    <li><strong>Interpreted execution:</strong> Core operations execute in Python's interpreter loop,
-                        not compiled native code, adding substantial per-row overhead</li>
-                    <li><strong>No query optimization:</strong> Operations execute immediately in the order written.
-                        Pandas cannot reorder, fuse, or eliminate operations based on the overall computation graph</li>
-                </ul>
-            </div>
-
-            <div class="content-box">
-                <h3>Latency Characteristics</h3>
-                <ul class="feature-list">
-                    <li><strong>Blocking operations:</strong> All operations complete fully before returning. No
-                        streaming or incremental results</li>
-                    <li><strong>Single-threaded default:</strong> Most operations use one core. Parallel execution
-                        requires explicit configuration and works only for specific functions</li>
-                </ul>
-            </div>
-
-            <div class="highlight-box">
-                <p><strong>These constraints become prohibitive for:</strong> high-frequency data transformation
-                    pipelines, multi-table joins on columnar data, memory-constrained environments, and applications
-                    requiring sub-100ms query response times.</p>
-            </div>
-
-            <h2>The Pandas Performance Problem</h2>
-
-            <p>Pandas is built on NumPy, which uses contiguous row-major arrays stored in Python-managed memory. This
-                architecture creates several systemic limitations that become critical at scale.</p>
-
-            <div class="content-box">
-                <h3>Memory Overhead</h3>
-                <ul class="feature-list">
-                    <li><strong>Eager materialization:</strong> Every intermediate operation allocates a new DataFrame,
-                        creating multiple full copies of the dataset in memory</li>
-                    <li><strong>Python object overhead:</strong> String and mixed-type columns store Python objects with
-                        per-element allocation overhead, often 2-10x larger than raw data</li>
-                    <li><strong>No memory mapping:</strong> Data must be loaded entirely into RAM—multi-gigabyte CSVs
-                        require full deserialization before any operation can begin</li>
-                </ul>
-            </div>
-
-            <div class="content-box">
-                <h3>Execution Model</h3>
-                <ul class="feature-list">
-                    <li><strong>Row-major layout:</strong> Operations that touch entire columns (aggregations, type
-                        conversions, filters) must traverse memory inefficiently</li>
-                    <li><strong>Interpreted execution:</strong> Core operations execute in Python's interpreter loop,
-                        not compiled native code, adding substantial per-row overhead</li>
-                    <li><strong>No query optimization:</strong> Operations execute immediately in the order
-                        written—Pandas cannot reorder, fuse, or eliminate operations based on the overall computation
-                        graph</li>
-                </ul>
-            </div>
-
-            <div class="content-box">
-                <h3>Latency Characteristics</h3>
-                <ul class="feature-list">
-                    <li><strong>Blocking operations:</strong> All operations complete fully before returning—no
-                        streaming or incremental results</li>
-                    <li><strong>Single-threaded default:</strong> Most operations use one core—parallel execution
-                        requires explicit configuration and works only for specific functions</li>
-                </ul>
-            </div>
-
-            <div class="highlight-box">
-                <p><strong>These constraints become prohibitive for:</strong> high-frequency data transformation
-                    pipelines, multi-table joins on columnar data, memory-constrained environments, and applications
-                    requiring sub-100ms query response times.</p>
-            </div>
-
-            <h2>How qutePandas Addresses These Limitations</h2>
-
-            <p class="section-intro">qutePandas routes DataFrame operations through PyKX to kdb+, translating your
-                familiar Pandas syntax into optimized q code automatically. You get kdb+'s columnar performance without
-                writing a single line of q.</p>
-
-            <div class="content-box">
-                <h3>Columnar Storage</h3>
-                <ul class="feature-list">
-                    <li><strong>Compressed columns:</strong> Each column stores homogeneous data in contiguous memory
-                        with optional compression. Integer and float columns typically consume 1/4 to 1/10 the space of
-                        equivalent Pandas structures</li>
-                    <li><strong>Memory-mapped tables:</strong> kdb+ can operate directly on disk-backed data without
-                        full deserialization. Large datasets remain partially on disk, loaded on-demand</li>
-                    <li><strong>Efficient null handling:</strong> Typed null values avoid Python object allocation
-                        entirely</li>
-                </ul>
-            </div>
-
-            <div class="content-box">
-                <h3>Native Compiled Execution</h3>
-                <ul class="feature-list">
-                    <li><strong>Vector primitives:</strong> Operations like filtering, aggregation, and type conversion
-                        compile to CPU vector instructions (SIMD where applicable)</li>
-                    <li><strong>Query fusion:</strong> kdb+ evaluates q expressions as compiled execution plans, not
-                        sequential Python calls. Multiple operations can be fused into a single pass over data</li>
-                    <li><strong>Automatic parallelism:</strong> kdb+ automatically parallelizes many operations across
-                        available cores without explicit user configuration</li>
-                </ul>
-            </div>
-
-            <div class="content-box">
-                <h3>Reduced Latency</h3>
-                <ul class="feature-list">
-                    <li><strong>In-memory indexing:</strong> Keyed tables provide hash-indexed lookups. Joins and
-                        groupby operations avoid full table scans</li>
-                    <li><strong>Lazy projection:</strong> Views and derived columns can defer computation until
-                        explicitly materialized</li>
-                </ul>
-            </div>
-
-            <h2>Design Philosophy and Trade-offs</h2>
-
-            <p>qutePandas makes explicit trade-offs to achieve performance gains. Understanding these constraints is
-                essential for effective usage.</p>
-
-            <div class="content-box">
-                <h3>Return Type Flexibility</h3>
-                <p>Functions accept a <code>return_type</code> parameter to control output format:</p>
-                <ul class="feature-list">
-                    <li><strong><code>return_type='q'</code> (default):</strong> Returns a PyKX table object. Subsequent
-                        qutePandas operations remain in kdb+ without round-tripping to Python</li>
-                    <li><strong><code>return_type='p'</code>:</strong> Converts result to a Pandas DataFrame. Use this
-                        for interoperability with Pandas-dependent libraries or when final output must be a DataFrame
-                    </li>
-                </ul>
-                <div class="highlight-box">
-                    <p><strong>Performance note:</strong> Frequent conversions negate performance benefits. Keep data in
-                        q format through transformation pipelines, converting only at boundaries.</p>
-                </div>
-            </div>
-
-            <div class="content-box">
-                <h3>Licensing Requirement</h3>
-                <p>qutePandas requires a valid kdb+ license. kdb+ is a commercial product from KX Systems.</p>
-                <ul class="feature-list">
-                    <li>Free personal and evaluation licenses are available for development and testing</li>
-                    <li>Production use requires commercial licensing from KX Systems</li>
-                    <li>This library does not provide or bypass license requirements</li>
-                </ul>
-            </div>
-
-            <div class="content-box">
-                <h3>Error Handling</h3>
-                <p>Errors from kdb+ operations surface as Python exceptions. While error messages may reference q
-                    terminology, the library shields you from needing to understand q syntax for normal operations.</p>
-                <ul class="feature-list">
-                    <li>Most common errors (missing columns, type mismatches) are handled with clear Python error
-                        messages</li>
-                    <li>Stack traces include both Python and q contexts for debugging</li>
-                    <li>Basic q error terminology is documented in the API reference</li>
-                </ul>
-            </div>
-
-            <h2>Non-Goals</h2>
-
-            <p>qutePandas does <strong>not</strong> aim to:</p>
-
-            <ul class="feature-list">
-                <li><strong>Replace Pandas for all use cases:</strong> Pandas' rich ecosystem, extensive API, and
-                    Python-native execution make it the right tool for many workflows</li>
-                <li><strong>Provide 100% API compatibility:</strong> I've implemented a functionally similar interface,
-                    not a drop-in replacement</li>
-                <li><strong>Hide kdb+ completely:</strong> Users should understand they're getting kdb+ performance
-                    benefits, though they don't need to learn q syntax</li>
-                <li><strong>Support streaming or distributed computation:</strong> qutePandas targets in-process or
-                    single-node kdb+ instances. Distributed kdb+ clusters require different integration patterns</li>
-            </ul>
-
-            <h2>When to Use qutePandas</h2>
-
-            <div class="comparison-grid">
-                <div class="comparison-card">
-                    <h4>✓ Use qutePandas When</h4>
-                    <ul>
-                        <li>Working with datasets larger than available RAM</li>
-                        <li>Performing repeated group-by, join, or aggregation operations</li>
-                        <li>Building data transformation pipelines with many intermediate steps</li>
-                        <li>Requiring consistent sub-second query latency on multi-GB tables</li>
-                        <li>Already using kdb+ for storage or analytics</li>
-                    </ul>
-                </div>
-                <div class="comparison-card">
-                    <h4>✓ Use Pandas When</h4>
-                    <ul>
-                        <li>Dataset fits comfortably in memory (< 50% of available RAM)</li>
-                        <li>Workflow depends on Pandas-specific features (MultiIndex, plotting)</li>
-                        <li>Interoperability with scikit-learn or statsmodels is critical</li>
-                        <li>Licensing constraints prevent kdb+ adoption</li>
-                        <li>Team prefers pure Python solutions</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2>Architecture</h2>
-
-            <p class="section-intro">qutePandas functions translate Pandas-like operations into q expressions, execute
-                them via PyKX, and return results in the requested format.</p>
-
-            <div class="content-box">
-                <h3>Execution Flow</h3>
-                <ul class="feature-list">
-                    <li><strong>Input normalization:</strong> Convert Pandas DataFrames or dictionaries to PyKX tables
-                        using <code>kx.toq()</code></li>
-                    <li><strong>q expression construction:</strong> Build parameterized q queries for the requested
-                        operation</li>
-                    <li><strong>Execution:</strong> Pass queries and data to kdb+ via <code>kx.q()</code></li>
-                    <li><strong>Return formatting:</strong> Convert results to Pandas (if <code>return_type='p'</code>)
-                        or return PyKX table directly</li>
-                </ul>
-            </div>
-
-            <div class="highlight-box">
-                <p><strong>Deployment note:</strong> No persistent kdb+ process is required. PyKX runs kdb+ in embedded
-                    mode within the Python process. For production workloads with shared state, users can connect to
-                    external kdb+ instances via PyKX, though qutePandas functions assume embedded execution by default.
-                </p>
-            </div>
-
-            <h2>Technical Requirements</h2>
-
-            <div class="content-box">
-                <ul class="feature-list">
-                    <li><strong>Python 3.8+</strong></li>
-                    <li><strong>PyKX:</strong> Python interface to kdb+</li>
-                    <li><strong>kdb+ license:</strong> Personal, commercial, or on-demand license installed</li>
-                    <li><strong>Supported platforms:</strong> Linux (x86_64, ARM64), macOS (x86_64, ARM64), Windows
-                        (x86_64)</li>
-                </ul>
-                <p style="margin-top: 20px;">License files (<code>kc.lic</code> or token-based licenses) must be
-                    accessible via environment variables or standard search paths. See the Installation documentation
-                    for setup details.</p>
+            <div class="comparison-table-container">
+                <table class="execution-comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Standard Pandas</th>
+                            <th>qutePandas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Python code executed by CPython VM</td>
+                            <td>Python code executed by CPython VM</td>
+                        </tr>
+                        <tr>
+                            <td><code>pandas</code> method dispatch</td>
+                            <td><code>qutePandas</code> method dispatch</td>
+                        </tr>
+                        <tr>
+                            <td>Pandas internal logic</td>
+                            <td>Thin Python wrapper prepares <code>q</code> call</td>
+                        </tr>
+                        <tr>
+                            <td>Python stays in the execution path</td>
+                            <td class="highlight-cell"><strong>PyKX hands control to kdb+/q</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Python objects and NumPy arrays</td>
+                            <td class="highlight-cell"><code>q</code> expression executed in kdb runtime</td>
+                        </tr>
+                        <tr>
+                            <td>Pointer chasing per element</td>
+                            <td class="highlight-cell"><strong>Vector execution plan compiled</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Runtime <code>dtype</code> checks</td>
+                            <td class="highlight-cell">Fixed, <strong>strongly typed</strong> columns</td>
+                        </tr>
+                        <tr>
+                            <td>Cache-unfriendly access patterns</td>
+                            <td class="highlight-cell"><strong>Columnar, contiguous memory</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Frequent RAM access (200–300 cycles)</td>
+                            <td class="highlight-cell"><strong>L1 & L2 cache access (4–12 cycles)</strong></td>
+                        </tr>
+                        <tr>
+                            <td>CPU stalled waiting on memory</td>
+                            <td class="highlight-cell"><strong>CPU streams data predictably</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Result assembled via Python objects</td>
+                            <td class="highlight-cell">Result fully computed in kdb+</td>
+                        </tr>
+                        <tr>
+                            <td>Returned to Python</td>
+                            <td class="highlight-cell">Compact result returned via PyKX</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
         <footer>

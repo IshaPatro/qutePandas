@@ -817,3 +817,85 @@ ol.setup-checklist li:before {
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 8px;
 }
+
+/* Execution Pipeline Comparison Table */
+.comparison-table-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.execution-comparison-table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: collapse;
+    background: var(--side-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.execution-comparison-table thead tr {
+    background: linear-gradient(135deg, rgba(88, 166, 255, 0.15), rgba(88, 166, 255, 0.05));
+}
+
+.execution-comparison-table th {
+    padding: 20px 24px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.execution-comparison-table th:first-child {
+    border-right: 1px solid var(--border-color);
+}
+
+.execution-comparison-table td {
+    padding: 16px 24px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.execution-comparison-table td:first-child {
+    border-right: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+.execution-comparison-table tr:last-child td {
+    border-bottom: none;
+}
+
+.execution-comparison-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.execution-comparison-table .highlight-cell {
+    background: rgba(63, 185, 80, 0.08);
+    color: var(--success);
+}
+
+.execution-comparison-table .highlight-cell strong {
+    color: var(--success);
+}
+
+.execution-comparison-table code {
+    background: rgba(88, 166, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .execution-comparison-table th,
+    .execution-comparison-table td {
+        padding: 12px 16px;
+        font-size: 0.85rem;
+    }
+}
